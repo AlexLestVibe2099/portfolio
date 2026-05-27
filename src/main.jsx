@@ -345,6 +345,26 @@ function Contact({ eyebrow = '04 / Контакт' }) {
 }
 
 function CasePage({ item }) {
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isDemoOpen) return undefined;
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsDemoOpen(false);
+      }
+    };
+
+    document.body.classList.add('modal-open');
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.classList.remove('modal-open');
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [isDemoOpen]);
+
   return (
     <main className="case-page">
       <section className="case-hero section">
@@ -429,20 +449,65 @@ function CasePage({ item }) {
         <div className="demo-box">
           <div>
             <p className="eyebrow">04 / Видео-демо</p>
-            <h2>Место для короткого видеообзора</h2>
+            <h2>Короткий видеообзор проекта</h2>
             <p>
-              Сюда можно будет поставить запись экрана: как человек открывает лендинг, выбирает действие,
-              проходит Telegram-сценарий и попадает в готовую заявку для менеджера.
+              Можно быстро посмотреть, как выглядит лендинг вживую: первый экран, логика заявки,
+              ключевые блоки и переход к опубликованному продукту.
             </p>
           </div>
-          <div className="play-preview" aria-hidden="true">
-            <span />
+          <div className="demo-action">
+            <div className="demo-preview" aria-hidden="true">
+              <div className="demo-preview__bar">
+                <span />
+                <span />
+                <span />
+              </div>
+              <div className="demo-preview__screen">
+                <span className="demo-preview__play" />
+                <strong>Начало видео</strong>
+              </div>
+            </div>
+            <button
+              className="play-preview"
+              type="button"
+              aria-label="Открыть видео-демо проекта"
+              onClick={() => setIsDemoOpen(true)}
+            >
+              <span className="play-preview__icon" />
+              <span className="play-preview__text">
+                <strong>Запустить демо</strong>
+              </span>
+            </button>
           </div>
         </div>
       </section>
 
       <Contact eyebrow="05 / Контакт" />
+      {isDemoOpen && <DemoVideoModal onClose={() => setIsDemoOpen(false)} />}
     </main>
+  );
+}
+
+function DemoVideoModal({ onClose }) {
+  return (
+    <div className="video-modal" role="dialog" aria-modal="true" aria-label="Видео-демо проекта">
+      <button className="video-modal__backdrop" type="button" aria-label="Закрыть видео" onClick={onClose} />
+      <div className="video-modal__panel">
+        <div className="video-modal__header">
+          <div>
+            <p className="eyebrow eyebrow--compact">Демо / Видеообзор</p>
+            <h2>Telegram-заявочник в работе</h2>
+          </div>
+          <button className="video-modal__close" type="button" aria-label="Закрыть видео" onClick={onClose}>
+            ×
+          </button>
+        </div>
+        <video className="video-modal__player" controls autoPlay playsInline preload="metadata">
+          <source src="/demo-telegram-zayavchnik.mp4" type="video/mp4" />
+          Ваш браузер не поддерживает воспроизведение видео.
+        </video>
+      </div>
+    </div>
   );
 }
 
