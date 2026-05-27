@@ -5,8 +5,10 @@ import './styles.css';
 const portfolio = {
   brand: 'Webstack Lab',
   contact: {
-    email: 'hello@webstack-lab.ru',
-    telegram: '@your_username',
+    email: 'Alexander.brusnikin2016@yandex.ru',
+    telegram: '@AlexLest2099',
+    telegramUrl: 'https://t.me/AlexLest2099',
+    mailUrl: 'https://mail.yandex.ru/compose?mailto=Alexander.brusnikin2016%40yandex.ru',
   },
   cases: [
     {
@@ -50,6 +52,61 @@ function useHashRoute() {
   return hash.replace(/^#/, '') || '/';
 }
 
+function useScrollReveal(route) {
+  useEffect(() => {
+    const targets = document.querySelectorAll(
+      [
+        '.hero__copy',
+        '.hero__visual',
+        '.about > div',
+        '.section-head',
+        '.case-card',
+        '.step',
+        '.contact__inner',
+        '.info-block',
+        '.check-list p',
+        '.metric',
+        '.result-list span',
+        '.gallery-frame',
+        '.demo-box',
+        '.project-panel',
+      ].join(', ')
+    );
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    targets.forEach((target, index) => {
+      target.dataset.reveal = '';
+      target.style.setProperty('--reveal-delay', `${Math.min(index % 6, 5) * 70}ms`);
+    });
+
+    document.documentElement.classList.add('reveal-ready');
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      targets.forEach((target) => target.classList.add('is-visible'));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.16,
+        rootMargin: '0px 0px -70px',
+      }
+    );
+
+    targets.forEach((target) => observer.observe(target));
+
+    return () => observer.disconnect();
+  }, [route]);
+}
+
 function App() {
   const route = useHashRoute();
   const selectedCase = useMemo(() => {
@@ -64,6 +121,8 @@ function App() {
     }
   }, [route]);
 
+  useScrollReveal(route);
+
   return (
     <>
       <Header />
@@ -73,9 +132,15 @@ function App() {
 }
 
 function Header() {
+  const handleHomeClick = () => {
+    if (window.location.hash === '#/' || window.location.hash === '') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="site-header">
-      <a className="brand" href="#/" aria-label="На главную">
+      <a className="brand" href="#/" aria-label="На главную" onClick={handleHomeClick}>
         <span className="brand__mark">WS</span>
         <span>{portfolio.brand}</span>
       </a>
@@ -140,7 +205,7 @@ function About() {
   return (
     <section className="section about">
       <div>
-        <p className="eyebrow">Коротко о подходе</p>
+        <p className="eyebrow">01 / Коротко о подходе</p>
         <h2>Не просто красивая страница, а упаковка задачи в рабочий сценарий</h2>
       </div>
       <div className="about__text">
@@ -161,7 +226,7 @@ function Cases() {
   return (
     <section className="section cases" id="cases">
       <div className="section-head">
-        <p className="eyebrow">Кейсы</p>
+        <p className="eyebrow">02 / Кейсы</p>
         <h2>Проекты, которые можно открыть, показать и развивать дальше</h2>
       </div>
       <div className="case-grid">
@@ -171,7 +236,7 @@ function Cases() {
               <ProjectScreenshot compact />
             </div>
             <div className="case-card__body">
-              <p className="case-card__label">{item.label}</p>
+              <p className="eyebrow eyebrow--compact">Кейс / {item.label}</p>
               <h3>{item.title}</h3>
               <p>{item.problem}</p>
               <div className="case-card__tags">
@@ -179,7 +244,7 @@ function Cases() {
                 <span>Telegram</span>
                 <span>Заявки</span>
               </div>
-              <a className="text-link" href={`#/case/${item.id}`}>
+              <a className="button button--case" href={`#/case/${item.id}`}>
                 Открыть кейс
               </a>
             </div>
@@ -217,7 +282,7 @@ function Approach() {
   return (
     <section className="section approach" id="approach">
       <div className="section-head">
-        <p className="eyebrow">Подход</p>
+        <p className="eyebrow">03 / Подход</p>
         <h2>От идеи до страницы, которую не стыдно отправить клиенту</h2>
       </div>
       <div className="steps">
@@ -233,24 +298,47 @@ function Approach() {
   );
 }
 
-function Contact() {
+function Contact({ eyebrow = '04 / Контакт' }) {
+  const [copyStatus, setCopyStatus] = useState('');
+
+  const handleEmailClick = async () => {
+    try {
+      await navigator.clipboard.writeText(portfolio.contact.email);
+      setCopyStatus('Почта скопирована. Открою форму письма в Яндекс Почте.');
+    } catch {
+      setCopyStatus(`Почта: ${portfolio.contact.email}`);
+    }
+  };
+
   return (
     <section className="section contact" id="contact">
       <div className="contact__inner">
-        <p className="eyebrow">Контакт</p>
+        <p className="eyebrow">{eyebrow}</p>
         <h2>Есть идея для следующего проекта?</h2>
         <p>
           Можно начать с короткого описания задачи: что нужно показать, кто будет смотреть страницу и какое
           действие должен сделать человек после просмотра.
         </p>
         <div className="hero__actions">
-          <a className="button button--primary" href={`mailto:${portfolio.contact.email}`}>
+          <a
+            className="button button--primary"
+            href={portfolio.contact.mailUrl}
+            onClick={handleEmailClick}
+          >
             Написать на почту
+          </a>
+          <a className="button button--telegram" href={portfolio.contact.telegramUrl}>
+            Написать в Telegram
           </a>
           <a className="button button--ghost" href="#cases">
             Вернуться к кейсам
           </a>
         </div>
+        <div className="contact-links" aria-live="polite">
+          <span>{portfolio.contact.email}</span>
+          <span>{portfolio.contact.telegram}</span>
+        </div>
+        {copyStatus && <p className="contact-status">{copyStatus}</p>}
       </div>
     </section>
   );
@@ -265,7 +353,7 @@ function CasePage({ item }) {
         </a>
         <div className="case-hero__grid">
           <div>
-            <p className="eyebrow">{item.label}</p>
+            <p className="eyebrow">Кейс / {item.label}</p>
             <h1>{item.title}</h1>
             <p className="hero__lead">{item.problem}</p>
             <div className="hero__actions">
@@ -289,7 +377,7 @@ function CasePage({ item }) {
 
       <section className="section split-section">
         <div>
-          <p className="eyebrow">Что сделано</p>
+          <p className="eyebrow">01 / Что сделано</p>
           <h2>Связка, которая превращает интерес в понятную заявку</h2>
         </div>
         <div className="check-list">
@@ -301,7 +389,7 @@ function CasePage({ item }) {
 
       <section className="section results-section">
         <div className="section-head">
-          <p className="eyebrow">Что получилось</p>
+          <p className="eyebrow">02 / Что получилось</p>
           <h2>Менеджер получает не хаотичное сообщение, а подготовленный запрос</h2>
         </div>
         <div className="metrics">
@@ -321,7 +409,7 @@ function CasePage({ item }) {
 
       <section className="section gallery-section">
         <div className="section-head">
-          <p className="eyebrow">Скриншоты</p>
+          <p className="eyebrow">03 / Скриншоты</p>
           <h2>Визуальные фрагменты проекта</h2>
         </div>
         <div className="gallery">
@@ -340,7 +428,7 @@ function CasePage({ item }) {
       <section className="section demo-section">
         <div className="demo-box">
           <div>
-            <p className="eyebrow">Видео-демо</p>
+            <p className="eyebrow">04 / Видео-демо</p>
             <h2>Место для короткого видеообзора</h2>
             <p>
               Сюда можно будет поставить запись экрана: как человек открывает лендинг, выбирает действие,
@@ -353,7 +441,7 @@ function CasePage({ item }) {
         </div>
       </section>
 
-      <Contact />
+      <Contact eyebrow="05 / Контакт" />
     </main>
   );
 }
