@@ -502,7 +502,9 @@ function Faq() {
                   <span>{item.question}</span>
                   <i aria-hidden="true" />
                 </button>
-                {isOpen && <p className="faq-item__answer">{item.answer}</p>}
+                <div className="faq-item__answer-wrap" aria-hidden={!isOpen}>
+                  <p className="faq-item__answer">{item.answer}</p>
+                </div>
               </article>
             </div>
           );

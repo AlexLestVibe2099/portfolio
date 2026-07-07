@@ -52,6 +52,10 @@ html.reveal-ready [data-reveal].is-visible {
     filter: none;
     transition: none;
   }
+
+  .faq-item__answer-wrap {
+    transition: none;
+  }
 }
 
 body {
@@ -580,8 +584,23 @@ p {
   transform: rotate(-135deg);
 }
 
+.faq-item__answer-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  opacity: 0;
+  transition: grid-template-rows 320ms ease, opacity 220ms ease;
+}
+
+.faq-item--open .faq-item__answer-wrap {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
 .faq-item__answer {
+  min-height: 0;
   padding: 0 22px 20px;
+  overflow: hidden;
   color: #d7d0c3;
 }
 
