@@ -2,92 +2,20 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://your-portfolio.vercel.app';
-const YM_COUNTER_ID = import.meta.env.VITE_YM_COUNTER_ID || '';
-
-const LEAD_TEMPLATE =
-  'Здравствуйте! Хочу обсудить проект.\n\nЗадача: \nДля кого сайт/бот: \nСрок: \nБюджет: ';
-
 const portfolio = {
   brand: 'Webstack Lab',
   contact: {
     email: 'Alexander.brusnikin2016@yandex.ru',
     telegram: '@AlexLest2099',
-    telegramHandle: 'AlexLest2099',
-    telegramUrl: `https://t.me/AlexLest2099?text=${encodeURIComponent(LEAD_TEMPLATE)}`,
-    mailUrl: `https://mail.yandex.ru/compose?mailto=${encodeURIComponent(
-      'Alexander.brusnikin2016@yandex.ru'
-    )}&subject=${encodeURIComponent('Заявка на проект — Webstack Lab')}&body=${encodeURIComponent(LEAD_TEMPLATE)}`,
-    mailtoUrl: `mailto:Alexander.brusnikin2016@yandex.ru?subject=${encodeURIComponent(
-      'Заявка на проект — Webstack Lab'
-    )}&body=${encodeURIComponent(LEAD_TEMPLATE)}`,
+    telegramUrl: 'https://t.me/AlexLest2099',
+    mailUrl: 'https://mail.yandex.ru/compose?mailto=Alexander.brusnikin2016%40yandex.ru',
   },
-  stats: [
-    { value: '1+', label: 'готовый кейс в портфолио' },
-    { value: '3–7 дней', label: 'типичный срок запуска' },
-    { value: 'от 5 000 ₽', label: 'стартовый проект под ключ' },
-  ],
-  services: [
-    {
-      id: 'landing',
-      title: 'Лендинг',
-      price: 'от 5 000 ₽',
-      summary: 'Одностраничный сайт, который объясняет услугу и ведёт к заявке.',
-      features: ['Адаптивная вёрстка', 'Структура под конверсию', 'Готовность к деплою'],
-      cta: 'Заказать лендинг',
-    },
-    {
-      id: 'bot',
-      title: 'Telegram-бот',
-      price: 'от 8 000 ₽',
-      summary: 'Бот собирает детали заявки и отдаёт менеджеру готовую карточку.',
-      features: ['Сценарий вопросов', 'Уведомления менеджеру', 'Простая настройка'],
-      cta: 'Заказать бота',
-      featured: true,
-    },
-    {
-      id: 'bundle',
-      title: 'Лендинг + бот',
-      price: 'от 12 000 ₽',
-      summary: 'Связка: человек с лендинга попадает в Telegram и оставляет полную заявку.',
-      features: ['Единый путь клиента', 'Меньше потерянных лидов', 'Готовый кейс как образец'],
-      cta: 'Обсудить связку',
-    },
-  ],
-  faq: [
-    {
-      question: 'Сколько занимает запуск?',
-      answer:
-        'Простой лендинг или бот — обычно 3–7 дней. Связка «лендинг + бот» — до 10 дней в зависимости от сценария и количества правок.',
-    },
-    {
-      question: 'Что входит в работу?',
-      answer:
-        'Структура страницы или сценария, интерфейс, адаптив, проверка на мобильных, сборка и ссылка для публикации. Тексты можно передать готовые или собрать вместе на старте.',
-    },
-    {
-      question: 'Нужен ли мне свой хостинг?',
-      answer:
-        'Для лендинга подойдёт бесплатный хостинг вроде Vercel. Для бота — небольшой облачный сервер; помогу с первичной настройкой и объясню, что где лежит.',
-    },
-    {
-      question: 'Что после сдачи проекта?',
-      answer:
-        'Передаю доступы, короткую инструкцию и остаюсь на связи по мелким правкам в первые дни после запуска. Доработки и новые функции — отдельно по договорённости.',
-    },
-    {
-      question: 'Можно начать с маленького объёма?',
-      answer:
-        'Да. Часто логично стартовать с лендинга или простого бота, проверить отклик и потом наращивать сценарий — без лишних затрат на старте.',
-    },
-  ],
   cases: [
     {
       id: 'telegram-zayavchnik',
       title: 'Telegram-заявочник',
       label: 'Лендинг + Telegram-сценарий',
-      audience:
-        'Для услуг, онлайн-обучения, студий и небольших команд, где заявки приходят из разных каналов.',
+      audience: 'Для услуг, онлайн-обучения, студий и небольших команд, где заявки приходят из разных каналов.',
       problem:
         'Клиент пишет короткое сообщение, менеджер вручную уточняет задачу, бюджет, сроки и контакт, а часть обращений остывает до нормального разговора.',
       before:
@@ -112,53 +40,6 @@ const portfolio = {
   ],
 };
 
-function buildLeadMessage({ name, contact, task }) {
-  return [
-    'Здравствуйте! Хочу обсудить проект.',
-    '',
-    name ? `Имя: ${name}` : null,
-    contact ? `Контакт: ${contact}` : null,
-    task ? `Задача: ${task}` : null,
-  ]
-    .filter(Boolean)
-    .join('\n');
-}
-
-function buildServiceLeadMessage(serviceTitle) {
-  return `Здравствуйте! Интересует услуга «${serviceTitle}».\n\nЗадача: \nСрок: \nБюджет: `;
-}
-
-function useYandexMetrika() {
-  useEffect(() => {
-    if (!YM_COUNTER_ID || typeof window === 'undefined') return undefined;
-
-    const scriptId = 'yandex-metrika-script';
-    if (document.getElementById(scriptId)) return undefined;
-
-    window.ym =
-      window.ym ||
-      function ym(...args) {
-        (window.ym.a = window.ym.a || []).push(args);
-      };
-    window.ym.l = Date.now();
-
-    const script = document.createElement('script');
-    script.id = scriptId;
-    script.async = true;
-    script.src = `https://mc.yandex.ru/metrika/tag.js`;
-    document.head.appendChild(script);
-
-    window.ym(Number(YM_COUNTER_ID), 'init', {
-      clickmap: true,
-      trackLinks: true,
-      accurateTrackBounce: true,
-      webvisor: true,
-    });
-
-    return undefined;
-  }, []);
-}
-
 function useHashRoute() {
   const [hash, setHash] = useState(window.location.hash || '#/');
 
@@ -178,13 +59,9 @@ function useScrollReveal(route) {
         '.hero__copy',
         '.hero__visual',
         '.about > div',
-        '.stat',
         '.section-head',
-        '.service-card',
         '.case-card',
         '.step',
-        '.faq-item',
-        '.lead-form',
         '.contact__inner',
         '.info-block',
         '.check-list p',
@@ -238,21 +115,10 @@ function App() {
     return portfolio.cases.find((item) => item.id === match[1]);
   }, [route]);
 
-  useYandexMetrika();
-
   useEffect(() => {
     if (route === '/' || route.startsWith('/case/')) {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
-  }, [route]);
-
-  useEffect(() => {
-    const ogUrl = document.querySelector('meta[property="og:url"]');
-    const canonical = document.querySelector('link[rel="canonical"]');
-    const pageUrl = `${SITE_URL.replace(/\/$/, '')}/${window.location.hash || '#/'}`;
-
-    if (ogUrl) ogUrl.setAttribute('content', pageUrl);
-    if (canonical) canonical.setAttribute('href', `${SITE_URL.replace(/\/$/, '')}/`);
   }, [route]);
 
   useScrollReveal(route);
@@ -279,10 +145,8 @@ function Header() {
         <span>{portfolio.brand}</span>
       </a>
       <nav className="nav" aria-label="Основная навигация">
-        <a href="#services">Услуги</a>
         <a href="#cases">Кейсы</a>
         <a href="#approach">Подход</a>
-        <a href="#faq">FAQ</a>
         <a href="#contact">Контакт</a>
       </nav>
       <a className="header-cta" href="#contact">
@@ -297,11 +161,8 @@ function HomePage() {
     <main>
       <Hero />
       <About />
-      <SocialProof />
-      <Services />
       <Cases />
       <Approach />
-      <Faq />
       <Contact />
     </main>
   );
@@ -317,8 +178,8 @@ function Hero() {
           запустить решение в работу.
         </p>
         <div className="hero__actions">
-          <a className="button button--primary" href="#services">
-            Смотреть услуги
+          <a className="button button--primary" href="#cases">
+            Смотреть кейсы
           </a>
           <a className="button button--ghost" href="#contact">
             Обсудить проект
@@ -361,67 +222,11 @@ function About() {
   );
 }
 
-function SocialProof() {
-  return (
-    <section className="section social-proof" aria-label="Ключевые показатели">
-      <div className="stats">
-        {portfolio.stats.map((item) => (
-          <article className="stat" key={item.label}>
-            <strong>{item.value}</strong>
-            <span>{item.label}</span>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Services() {
-  return (
-    <section className="section services" id="services">
-      <div className="section-head">
-        <p className="eyebrow">02 / Услуги и цены</p>
-        <h2>Что можно заказать и с какого бюджета стартовать</h2>
-      </div>
-      <div className="service-grid">
-        {portfolio.services.map((item) => (
-          <article
-            className={`service-card${item.featured ? ' service-card--featured' : ''}`}
-            key={item.id}
-          >
-            {item.featured && <span className="service-card__badge">Популярно</span>}
-            <div className="service-card__head">
-              <h3>{item.title}</h3>
-              <strong>{item.price}</strong>
-            </div>
-            <p>{item.summary}</p>
-            <ul className="service-card__list">
-              {item.features.map((feature) => (
-                <li key={feature}>{feature}</li>
-              ))}
-            </ul>
-            <a
-              className="button button--case"
-              href={`https://t.me/${portfolio.contact.telegramHandle}?text=${encodeURIComponent(
-                buildServiceLeadMessage(item.title)
-              )}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {item.cta}
-            </a>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function Cases() {
   return (
     <section className="section cases" id="cases">
       <div className="section-head">
-        <p className="eyebrow">03 / Кейсы</p>
+        <p className="eyebrow">02 / Кейсы</p>
         <h2>Проекты, которые можно открыть, показать и развивать дальше</h2>
       </div>
       <div className="case-grid">
@@ -450,6 +255,22 @@ function Cases() {
   );
 }
 
+function MiniLandingMockup() {
+  return (
+    <div className="mini-mockup" aria-hidden="true">
+      <div className="mini-mockup__bar" />
+      <div className="mini-mockup__headline" />
+      <div className="mini-mockup__line mini-mockup__line--short" />
+      <div className="mini-mockup__row">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="mini-mockup__cta" />
+    </div>
+  );
+}
+
 function Approach() {
   const steps = [
     ['01', 'Разобрать задачу', 'Понять, кто заходит на сайт, что ему важно и какое действие нужно получить.'],
@@ -461,7 +282,7 @@ function Approach() {
   return (
     <section className="section approach" id="approach">
       <div className="section-head">
-        <p className="eyebrow">04 / Подход</p>
+        <p className="eyebrow">03 / Подход</p>
         <h2>От идеи до страницы, которую не стыдно отправить клиенту</h2>
       </div>
       <div className="steps">
@@ -477,118 +298,13 @@ function Approach() {
   );
 }
 
-function Faq() {
-  const [openIndex, setOpenIndex] = useState(0);
-
-  return (
-    <section className="section faq" id="faq">
-      <div className="section-head">
-        <p className="eyebrow">05 / FAQ</p>
-        <h2>Частые вопросы перед стартом</h2>
-      </div>
-      <div className="faq-list">
-        {portfolio.faq.map((item, index) => {
-          const isOpen = openIndex === index;
-
-          return (
-            <article className={`faq-item${isOpen ? ' faq-item--open' : ''}`} key={item.question}>
-              <button
-                className="faq-item__trigger"
-                type="button"
-                aria-expanded={isOpen}
-                onClick={() => setOpenIndex(isOpen ? -1 : index)}
-              >
-                <span>{item.question}</span>
-                <i aria-hidden="true" />
-              </button>
-              {isOpen && <p className="faq-item__answer">{item.answer}</p>}
-            </article>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-function LeadForm() {
-  const [form, setForm] = useState({ name: '', contact: '', task: '' });
-  const [status, setStatus] = useState('');
-
-  const handleChange = (field) => (event) => {
-    setForm((current) => ({ ...current, [field]: event.target.value }));
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    if (!form.contact.trim() || !form.task.trim()) {
-      setStatus('Укажите контакт и кратко опишите задачу — так быстрее отвечу.');
-      return;
-    }
-
-    const message = buildLeadMessage(form);
-    const telegramUrl = `https://t.me/${portfolio.contact.telegramHandle}?text=${encodeURIComponent(message)}`;
-    window.open(telegramUrl, '_blank', 'noopener,noreferrer');
-    setStatus('Открыл Telegram с готовым текстом заявки. Можно отправить как есть или дописать детали.');
-  };
-
-  return (
-    <form className="lead-form" onSubmit={handleSubmit}>
-      <div className="lead-form__grid">
-        <label className="lead-form__field">
-          <span>Имя</span>
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            placeholder="Как к вам обращаться"
-            onChange={handleChange('name')}
-            autoComplete="name"
-          />
-        </label>
-        <label className="lead-form__field">
-          <span>Контакт</span>
-          <input
-            type="text"
-            name="contact"
-            value={form.contact}
-            placeholder="Telegram или почта"
-            onChange={handleChange('contact')}
-            autoComplete="email"
-            required
-          />
-        </label>
-      </div>
-      <label className="lead-form__field">
-        <span>Кратко о задаче</span>
-        <textarea
-          name="task"
-          value={form.task}
-          rows={4}
-          placeholder="Что нужно сделать, для кого и к какому сроку"
-          onChange={handleChange('task')}
-          required
-        />
-      </label>
-      <button className="button button--primary" type="submit">
-        Отправить заявку в Telegram
-      </button>
-      {status && (
-        <p className="contact-status" aria-live="polite">
-          {status}
-        </p>
-      )}
-    </form>
-  );
-}
-
-function Contact({ eyebrow = '06 / Контакт' }) {
+function Contact({ eyebrow = '04 / Контакт' }) {
   const [copyStatus, setCopyStatus] = useState('');
 
   const handleEmailClick = async () => {
     try {
       await navigator.clipboard.writeText(portfolio.contact.email);
-      setCopyStatus('Почта скопирована. Открою форму письма с готовым текстом.');
+      setCopyStatus('Почта скопирована. Открою форму письма в Яндекс Почте.');
     } catch {
       setCopyStatus(`Почта: ${portfolio.contact.email}`);
     }
@@ -600,11 +316,10 @@ function Contact({ eyebrow = '06 / Контакт' }) {
         <p className="eyebrow">{eyebrow}</p>
         <h2>Есть идея для следующего проекта?</h2>
         <p>
-          Оставьте короткую заявку ниже или напишите напрямую — в письме и Telegram уже будет заготовленный
-          текст, останется дописать детали.
+          Можно начать с короткого описания задачи: что нужно показать, кто будет смотреть страницу и какое
+          действие должен сделать человек после просмотра.
         </p>
-        <LeadForm />
-        <div className="hero__actions contact__actions">
+        <div className="hero__actions">
           <a
             className="button button--primary"
             href={portfolio.contact.mailUrl}
@@ -612,12 +327,7 @@ function Contact({ eyebrow = '06 / Контакт' }) {
           >
             Написать на почту
           </a>
-          <a
-            className="button button--telegram"
-            href={portfolio.contact.telegramUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a className="button button--telegram" href={portfolio.contact.telegramUrl}>
             Написать в Telegram
           </a>
           <a className="button button--ghost" href="#cases">
@@ -667,7 +377,7 @@ function CasePage({ item }) {
             <h1>{item.title}</h1>
             <p className="hero__lead">{item.problem}</p>
             <div className="hero__actions">
-              <a className="button button--primary" href={item.url} target="_blank" rel="noreferrer">
+              <a className="button button--primary" href={item.url}>
                 Открыть продукт
               </a>
               <a className="button button--ghost" href="#contact">
@@ -819,7 +529,10 @@ function ProjectScreenshot({ compact = false }) {
         <span />
         <strong>telegram-landing-gamma.vercel.app</strong>
       </div>
-      <img src="/case-telegram-landing.png" alt="Скриншот лендинга Telegram-заявочник" />
+      <img
+        src="/case-telegram-landing.png"
+        alt="Скриншот лендинга Telegram-заявочник"
+      />
     </figure>
   );
 }
@@ -844,7 +557,7 @@ function LeadCardMockup() {
       <div>Услуга: индивидуальная консультация</div>
       <div>Срок: на этой неделе</div>
       <div>Бюджет: до 8 000 ₽</div>
-      <button type="button">Готово к ответу</button>
+      <button>Готово к ответу</button>
     </div>
   );
 }
