@@ -112,20 +112,8 @@ const portfolio = {
   ],
 };
 
-function buildLeadMessage({ name, contact, task }) {
-  return [
-    'Здравствуйте! Хочу обсудить проект.',
-    '',
-    name ? `Имя: ${name}` : null,
-    contact ? `Контакт: ${contact}` : null,
-    task ? `Задача: ${task}` : null,
-  ]
-    .filter(Boolean)
-    .join('\n');
-}
-
-function buildServiceLeadMessage(serviceTitle) {
-  return `Здравствуйте! Интересует услуга «${serviceTitle}».\n\nЗадача: \nСрок: \nБюджет: `;
+function buildServiceTaskPrefill(serviceTitle) {
+  return `Интересует услуга «${serviceTitle}». Описание задачи: `;
 }
 
 function useYandexMetrika() {
@@ -293,16 +281,29 @@ function Header() {
 }
 
 function HomePage() {
+  const [prefillTask, setPrefillTask] = useState('');
+  const [prefillService, setPrefillService] = useState('');
+
+  const handleServiceRequest = (serviceTitle) => {
+    setPrefillTask(buildServiceTaskPrefill(serviceTitle));
+    setPrefillService(serviceTitle);
+
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <main>
       <Hero />
       <About />
       <SocialProof />
-      <Services />
+      <Services onServiceRequest={handleServiceRequest} />
       <Cases />
       <Approach />
       <Faq />
-      <Contact />
+      <Contact prefillTask={prefillTask} prefillService={prefillService} />
     </main>
   );
 }
@@ -376,7 +377,7 @@ function SocialProof() {
   );
 }
 
-function Services() {
+function Services({ onServiceRequest }) {
   return (
     <section className="section services" id="services">
       <div className="section-head">
@@ -400,16 +401,13 @@ function Services() {
                 <li key={feature}>{feature}</li>
               ))}
             </ul>
-            <a
+            <button
               className="button button--case"
-              href={`https://t.me/${portfolio.contact.telegramHandle}?text=${encodeURIComponent(
-                buildServiceLeadMessage(item.title)
-              )}`}
-              target="_blank"
-              rel="noreferrer"
+              type="button"
+              onClick={() => onServiceRequest?.(item.title)}
             >
               {item.cta}
-            </a>
+            </button>
           </article>
         ))}
       </div>
@@ -514,30 +512,93 @@ function Faq() {
   );
 }
 
-function LeadForm() {
-  const [form, setForm] = useState({ name: '', contact: '', task: '' });
+function LeadForm({ prefillTask = '', prefillService = '' }) {
+  const [form, setForm] = useState({ name: '', contact: '', task: '', honeypot: '' });
+  const [submitState, setSubmitState] = useState('idle');
   const [status, setStatus] = useState('');
 
   const handleChange = (field) => (event) => {
     setForm((current) => ({ ...current, [field]: event.target.value }));
   };
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    if (!prefillTask) return;
+    setForm((current) => ({ ...current, task: prefillTask }));
+    setSubmitState('idle');
+    setStatus(`Заполнил шаблон под услугу «${prefillService || 'выбранная услуга'}».`);
+  }, [prefillTask, prefillService]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    setSubmitState('idle');
 
     if (!form.contact.trim() || !form.task.trim()) {
       setStatus('Укажите контакт и кратко опишите задачу — так быстрее отвечу.');
+      setSubmitState('error');
       return;
     }
 
-    const message = buildLeadMessage(form);
-    const telegramUrl = `https://t.me/${portfolio.contact.telegramHandle}?text=${encodeURIComponent(message)}`;
-    window.open(telegramUrl, '_blank', 'noopener,noreferrer');
-    setStatus('Открыл Telegram с готовым текстом заявки. Можно отправить как есть или дописать детали.');
+    setSubmitState('submitting');
+    setStatus('Отправляю заявку...');
+
+    try {
+      const response = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          contact: form.contact.trim(),
+          task: form.task.trim(),
+          serviceTitle: prefillService,
+          source: 'contact-form',
+          honeypot: form.honeypot,
+        }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok || !payload.ok) {
+        throw new Error(payload.error || 'Не удалось отправить заявку.');
+      }
+
+      setSubmitState('success');
+      setStatus(
+        'Заявка принята. Ожидайте обратной связи — мы свяжемся с вами в ближайшее время.'
+      );
+      setForm({ name: '', contact: '', task: '', honeypot: '' });
+    } catch (error) {
+      setSubmitState('error');
+      setStatus(
+        error instanceof Error
+          ? `Не удалось отправить заявку автоматически: ${error.message}`
+          : 'Не удалось отправить заявку автоматически.'
+      );
+    }
   };
+
+  if (submitState === 'success') {
+    return (
+      <div className="lead-success" role="status" aria-live="polite">
+        <strong>Заявка принята</strong>
+        <p>{status}</p>
+      </div>
+    );
+  }
 
   return (
     <form className="lead-form" onSubmit={handleSubmit}>
+      <label className="lead-form__honeypot" aria-hidden="true">
+        <span>Оставьте поле пустым</span>
+        <input
+          type="text"
+          name="company"
+          tabIndex={-1}
+          autoComplete="off"
+          value={form.honeypot}
+          onChange={handleChange('honeypot')}
+        />
+      </label>
       <div className="lead-form__grid">
         <label className="lead-form__field">
           <span>Имя</span>
@@ -574,19 +635,29 @@ function LeadForm() {
           required
         />
       </label>
-      <button className="button button--primary" type="submit">
-        Отправить заявку в Telegram
+      <button className="button button--primary" type="submit" disabled={submitState === 'submitting'}>
+        {submitState === 'submitting' ? 'Отправка...' : 'Отправить заявку'}
       </button>
       {status && (
         <p className="contact-status" aria-live="polite">
           {status}
         </p>
       )}
+      {submitState === 'error' && (
+        <div className="lead-form__fallback">
+          <a className="button button--telegram" href={portfolio.contact.telegramUrl} target="_blank" rel="noreferrer">
+            Написать в Telegram вручную
+          </a>
+          <a className="button button--ghost" href={portfolio.contact.mailtoUrl}>
+            Написать на почту
+          </a>
+        </div>
+      )}
     </form>
   );
 }
 
-function Contact({ eyebrow = '06 / Контакт' }) {
+function Contact({ eyebrow = '06 / Контакт', prefillTask = '', prefillService = '' }) {
   const [copyStatus, setCopyStatus] = useState('');
 
   const handleEmailClick = async () => {
@@ -604,10 +675,10 @@ function Contact({ eyebrow = '06 / Контакт' }) {
         <p className="eyebrow">{eyebrow}</p>
         <h2>Есть идея для следующего проекта?</h2>
         <p>
-          Оставьте короткую заявку ниже или напишите напрямую — в письме и Telegram уже будет заготовленный
-          текст, останется дописать детали.
+          Оставьте короткую заявку ниже — она автоматически придет в Telegram. Также можно написать
+          напрямую через кнопки контактов.
         </p>
-        <LeadForm />
+        <LeadForm prefillTask={prefillTask} prefillService={prefillService} />
         <div className="hero__actions contact__actions">
           <a
             className="button button--primary"

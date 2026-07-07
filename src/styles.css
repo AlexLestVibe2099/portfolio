@@ -313,12 +313,19 @@ p {
   padding: 0 22px;
   border: 1px solid transparent;
   border-radius: 7px;
+  cursor: pointer;
   font-size: 0.98rem;
   transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
 .button:hover {
   transform: translateY(-2px);
+}
+
+.button:disabled {
+  opacity: 0.72;
+  cursor: progress;
+  transform: none;
 }
 
 .button--primary {
@@ -613,6 +620,14 @@ p {
   background: rgba(8, 9, 11, 0.42);
 }
 
+.lead-form__honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .lead-form__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -651,6 +666,32 @@ p {
 .lead-form__field textarea:focus {
   outline: 2px solid rgba(101, 231, 239, 0.45);
   outline-offset: 2px;
+}
+
+.lead-form__fallback {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.lead-success {
+  display: grid;
+  gap: 12px;
+  padding: 26px;
+  border: 1px solid rgba(101, 231, 239, 0.4);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(101, 231, 239, 0.14), rgba(255, 213, 106, 0.08)),
+    rgba(8, 9, 11, 0.5);
+}
+
+.lead-success strong {
+  color: var(--cyan);
+  font-size: 1.1rem;
+}
+
+.lead-success p {
+  color: #e7e1d6;
 }
 
 .contact__actions {
