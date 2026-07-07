@@ -113,7 +113,14 @@ const portfolio = {
 };
 
 function buildServiceTaskPrefill(serviceTitle) {
-  return `Интересует услуга «${serviceTitle}». Описание задачи: `;
+  return [
+    `Интересует услуга «${serviceTitle}».`,
+    '',
+    'Описание запроса: ',
+    'Желаемые сроки: ',
+    'Бюджет: ',
+    'Пожелания: ',
+  ].join('\n');
 }
 
 function useYandexMetrika() {
@@ -525,8 +532,7 @@ function LeadForm({ prefillTask = '', prefillService = '' }) {
     if (!prefillTask) return;
     setForm((current) => ({ ...current, task: prefillTask }));
     setSubmitState('idle');
-    setStatus(`Заполнил шаблон под услугу «${prefillService || 'выбранная услуга'}».`);
-  }, [prefillTask, prefillService]);
+  }, [prefillTask]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
