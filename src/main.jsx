@@ -183,7 +183,7 @@ function useScrollReveal(route) {
         '.service-card',
         '.case-card',
         '.step',
-        '.faq-item',
+        '.faq-item-wrap',
         '.lead-form',
         '.contact__inner',
         '.info-block',
@@ -491,18 +491,20 @@ function Faq() {
           const isOpen = openIndex === index;
 
           return (
-            <article className={`faq-item${isOpen ? ' faq-item--open' : ''}`} key={item.question}>
-              <button
-                className="faq-item__trigger"
-                type="button"
-                aria-expanded={isOpen}
-                onClick={() => setOpenIndex(isOpen ? -1 : index)}
-              >
-                <span>{item.question}</span>
-                <i aria-hidden="true" />
-              </button>
-              {isOpen && <p className="faq-item__answer">{item.answer}</p>}
-            </article>
+            <div className="faq-item-wrap" key={item.question}>
+              <article className={`faq-item${isOpen ? ' faq-item--open' : ''}`}>
+                <button
+                  className="faq-item__trigger"
+                  type="button"
+                  aria-expanded={isOpen}
+                  onClick={() => setOpenIndex(isOpen ? -1 : index)}
+                >
+                  <span>{item.question}</span>
+                  <i aria-hidden="true" />
+                </button>
+                {isOpen && <p className="faq-item__answer">{item.answer}</p>}
+              </article>
+            </div>
           );
         })}
       </div>
