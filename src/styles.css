@@ -546,7 +546,7 @@ p {
 
 .faq-list {
   display: grid;
-  gap: 12px;
+  gap: 14px;
 }
 
 .faq-item {
@@ -565,26 +565,39 @@ p {
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  padding: 20px 22px;
+  gap: 20px;
+  padding: 26px 26px;
   border: 0;
   background: transparent;
   color: var(--text);
   cursor: pointer;
-  font: inherit;
-  font-size: 1.02rem;
-  font-weight: 850;
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-size: clamp(1.08rem, 1.6vw, 1.28rem);
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
   text-align: left;
+  transition: color 180ms ease;
+}
+
+.faq-item__trigger:hover {
+  color: var(--cyan);
 }
 
 .faq-item__trigger i {
   flex: 0 0 auto;
-  width: 14px;
-  height: 14px;
-  border-right: 2px solid var(--yellow);
-  border-bottom: 2px solid var(--yellow);
+  width: 16px;
+  height: 16px;
+  margin-top: -4px;
+  border-right: 2.5px solid var(--yellow);
+  border-bottom: 2.5px solid var(--yellow);
+  border-radius: 1px;
   transform: rotate(45deg);
-  transition: transform 180ms ease;
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.faq-item__trigger:hover i {
+  border-color: var(--cyan);
 }
 
 .faq-item--open .faq-item__trigger i {
@@ -606,9 +619,11 @@ p {
 
 .faq-item__answer {
   min-height: 0;
-  padding: 0 22px 20px;
+  padding: 0 26px 26px;
   overflow: hidden;
   color: #d7d0c3;
+  font-size: 1.05rem;
+  line-height: 1.7;
 }
 
 .lead-form {
