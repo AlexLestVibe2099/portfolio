@@ -4,6 +4,7 @@ import './styles.css';
 
 const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://your-portfolio.vercel.app';
 const YM_COUNTER_ID = import.meta.env.VITE_YM_COUNTER_ID || '';
+const LEGAL_BOT_URL = import.meta.env.VITE_LEGAL_BOT_URL || 'https://t.me/';
 
 const LEAD_TEMPLATE =
   'Здравствуйте! Хочу обсудить проект.\n\nЗадача: \nДля кого сайт/бот: \nСрок: \nБюджет: ';
@@ -23,7 +24,7 @@ const portfolio = {
     )}&body=${encodeURIComponent(LEAD_TEMPLATE)}`,
   },
   stats: [
-    { value: '1+', label: 'готовый кейс в портфолио' },
+    { value: '2+', label: 'готовых кейса в портфолио' },
     { value: '3–7 дней', label: 'типичный срок запуска' },
     { value: 'от 5 000 ₽', label: 'стартовый проект под ключ' },
   ],
@@ -108,6 +109,76 @@ const portfolio = {
         { value: '1 экран', label: 'для быстрого перехода к оплате или контакту' },
       ],
       url: 'https://telegram-landing-gamma.vercel.app/',
+      tags: ['Лендинг', 'Telegram', 'Заявки'],
+      productCta: 'Открыть лендинг',
+      cardMedia: 'screenshot',
+      screenshot: {
+        src: '/case-telegram-landing.png',
+        alt: 'Скриншот лендинга Telegram-заявочник',
+        barLabel: 'telegram-landing-gamma.vercel.app',
+      },
+      demo: {
+        src: '/demo-telegram-zayavchnik.mp4',
+        title: 'Telegram-заявочник в работе',
+        description:
+          'Можно быстро посмотреть, как выглядит лендинг вживую: первый экран, логика заявки, ключевые блоки и переход к опубликованному продукту.',
+      },
+      sections: {
+        workTitle: 'Связка, которая превращает интерес в понятную заявку',
+        resultsTitle: 'Менеджер получает не хаотичное сообщение, а подготовленный запрос',
+      },
+      preview: 'lead-card',
+      gallery: [
+        { title: 'Главный экран', type: 'screenshot' },
+        { title: 'Карточка заявки', type: 'lead-card' },
+        { title: 'Путь пользователя', type: 'flow' },
+      ],
+    },
+    {
+      id: 'legal-consult-bot',
+      title: 'Бот юридических консультаций',
+      label: 'Telegram-бот + AI-ассистент',
+      audience:
+        'Для юридических фирм и частных юристов: семейное право, трудовые споры, недвижимость, долги, бизнес, наследство. Клиенты получают первичную консультацию, помощь с документами, переговорами и представительством в суде.',
+      problem:
+        'Обращения приходят звонками и разрозненными сообщениями в мессенджерах. Юрист тратит время на первичный опрос, а часть клиентов теряется, пока ждёт ответа.',
+      before:
+        'До решения заявки были разбросаны по звонкам и личным чатам, типовые вопросы повторялись, а юристу приходилось вручную уточнять категорию, срочность и контакт перед каждой консультацией.',
+      work: [
+        'Собран пошаговый сценарий записи: категория права, описание ситуации, срочность, документы, способ связи и подтверждение заявки.',
+        'Настроена база заявок в Supabase и уведомления менеджерам в Telegram с готовой карточкой обращения.',
+        'Подключён AI-ассистент «Правовой компас» на GigaChat с базой знаний (RAG): ответы на типовые вопросы, ориентиры по ценам и защита от prompt injection.',
+      ],
+      results: [
+        'Клиент получает ответ сразу, без ожидания звонка юриста.',
+        'Заявка приходит структурированной: категория, суть, срочность и контакт.',
+        'Менеджер видит все обращения в одной базе и быстрее принимает решение, кому ответить первым.',
+      ],
+      metrics: [
+        { value: '6+', label: 'направлений права в сценарии' },
+        { value: '7 шагов', label: 'от категории до готовой заявки' },
+        { value: '24/7', label: 'приём обращений без ожидания звонка' },
+      ],
+      url: LEGAL_BOT_URL,
+      tags: ['Telegram-бот', 'AI', 'Supabase'],
+      productCta: 'Открыть бота в Telegram',
+      cardMedia: 'chat',
+      screenshot: {
+        src: '/case-legal-bot.png',
+        alt: 'Скриншот Telegram-бота юридических консультаций',
+        barLabel: 't.me',
+      },
+      demo: null,
+      sections: {
+        workTitle: 'Бот, который собирает заявку и отвечает на типовые вопросы',
+        resultsTitle: 'Юрист получает структурированную заявку, а клиент — быстрый ответ',
+      },
+      preview: 'chat',
+      gallery: [
+        { title: 'Диалог с ботом', type: 'chat' },
+        { title: 'Карточка для юриста', type: 'legal-lead-card' },
+        { title: 'Путь пользователя', type: 'legal-flow' },
+      ],
     },
   ],
 };
@@ -433,16 +504,16 @@ function Cases() {
         {portfolio.cases.map((item) => (
           <article className="case-card" key={item.id}>
             <div className="case-card__media">
-              <ProjectScreenshot compact />
+              <CaseCardMedia item={item} />
             </div>
             <div className="case-card__body">
               <p className="eyebrow eyebrow--compact">Кейс / {item.label}</p>
               <h3>{item.title}</h3>
               <p>{item.problem}</p>
               <div className="case-card__tags">
-                <span>Лендинг</span>
-                <span>Telegram</span>
-                <span>Заявки</span>
+                {item.tags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
               </div>
               <a className="button button--case" href={`#/case/${item.id}`}>
                 Открыть кейс
@@ -717,6 +788,7 @@ function Contact({ eyebrow = '06 / Контакт', prefillTask = '', prefillSer
 
 function CasePage({ item }) {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const contactEyebrow = item.demo ? '05 / Контакт' : '04 / Контакт';
 
   useEffect(() => {
     if (!isDemoOpen) return undefined;
@@ -749,7 +821,7 @@ function CasePage({ item }) {
             <p className="hero__lead">{item.problem}</p>
             <div className="hero__actions">
               <a className="button button--primary" href={item.url} target="_blank" rel="noreferrer">
-                Открыть продукт
+                {item.productCta}
               </a>
               <a className="button button--ghost" href="#contact">
                 Обсудить похожий проект
@@ -769,7 +841,7 @@ function CasePage({ item }) {
       <section className="section split-section">
         <div>
           <p className="eyebrow">01 / Что сделано</p>
-          <h2>Связка, которая превращает интерес в понятную заявку</h2>
+          <h2>{item.sections.workTitle}</h2>
         </div>
         <div className="check-list">
           {item.work.map((point) => (
@@ -781,7 +853,7 @@ function CasePage({ item }) {
       <section className="section results-section">
         <div className="section-head">
           <p className="eyebrow">02 / Что получилось</p>
-          <h2>Менеджер получает не хаотичное сообщение, а подготовленный запрос</h2>
+          <h2>{item.sections.resultsTitle}</h2>
         </div>
         <div className="metrics">
           {item.metrics.map((metric) => (
@@ -804,62 +876,57 @@ function CasePage({ item }) {
           <h2>Визуальные фрагменты проекта</h2>
         </div>
         <div className="gallery">
-          <GalleryFrame title="Главный экран">
-            <ProjectScreenshot compact />
-          </GalleryFrame>
-          <GalleryFrame title="Карточка заявки">
-            <LeadCardMockup />
-          </GalleryFrame>
-          <GalleryFrame title="Путь пользователя">
-            <FlowMockup />
-          </GalleryFrame>
+          {item.gallery.map((galleryItem) => (
+            <GalleryFrame title={galleryItem.title} key={galleryItem.title}>
+              <CaseGalleryContent item={item} galleryItem={galleryItem} compact />
+            </GalleryFrame>
+          ))}
         </div>
       </section>
 
-      <section className="section demo-section">
-        <div className="demo-box">
-          <div>
-            <p className="eyebrow">04 / Видео-демо</p>
-            <h2>Короткий видеообзор проекта</h2>
-            <p>
-              Можно быстро посмотреть, как выглядит лендинг вживую: первый экран, логика заявки,
-              ключевые блоки и переход к опубликованному продукту.
-            </p>
-          </div>
-          <div className="demo-action">
-            <div className="demo-preview" aria-hidden="true">
-              <div className="demo-preview__bar">
-                <span />
-                <span />
-                <span />
-              </div>
-              <div className="demo-preview__screen">
-                <span className="demo-preview__play" />
-                <strong>Начало видео</strong>
-              </div>
+      {item.demo && (
+        <section className="section demo-section">
+          <div className="demo-box">
+            <div>
+              <p className="eyebrow">04 / Видео-демо</p>
+              <h2>Короткий видеообзор проекта</h2>
+              <p>{item.demo.description}</p>
             </div>
-            <button
-              className="play-preview"
-              type="button"
-              aria-label="Открыть видео-демо проекта"
-              onClick={() => setIsDemoOpen(true)}
-            >
-              <span className="play-preview__icon" />
-              <span className="play-preview__text">
-                <strong>Запустить демо</strong>
-              </span>
-            </button>
+            <div className="demo-action">
+              <div className="demo-preview" aria-hidden="true">
+                <div className="demo-preview__bar">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <div className="demo-preview__screen">
+                  <span className="demo-preview__play" />
+                  <strong>Начало видео</strong>
+                </div>
+              </div>
+              <button
+                className="play-preview"
+                type="button"
+                aria-label="Открыть видео-демо проекта"
+                onClick={() => setIsDemoOpen(true)}
+              >
+                <span className="play-preview__icon" />
+                <span className="play-preview__text">
+                  <strong>Запустить демо</strong>
+                </span>
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <Contact eyebrow="05 / Контакт" />
-      {isDemoOpen && <DemoVideoModal onClose={() => setIsDemoOpen(false)} />}
+      <Contact eyebrow={contactEyebrow} />
+      {isDemoOpen && item.demo && <DemoVideoModal demo={item.demo} onClose={() => setIsDemoOpen(false)} />}
     </main>
   );
 }
 
-function DemoVideoModal({ onClose }) {
+function DemoVideoModal({ demo, onClose }) {
   return (
     <div className="video-modal" role="dialog" aria-modal="true" aria-label="Видео-демо проекта">
       <button className="video-modal__backdrop" type="button" aria-label="Закрыть видео" onClick={onClose} />
@@ -867,14 +934,14 @@ function DemoVideoModal({ onClose }) {
         <div className="video-modal__header">
           <div>
             <p className="eyebrow eyebrow--compact">Демо / Видеообзор</p>
-            <h2>Telegram-заявочник в работе</h2>
+            <h2>{demo.title}</h2>
           </div>
           <button className="video-modal__close" type="button" aria-label="Закрыть видео" onClick={onClose}>
             ×
           </button>
         </div>
         <video className="video-modal__player" controls autoPlay playsInline preload="metadata">
-          <source src="/demo-telegram-zayavchnik.mp4" type="video/mp4" />
+          <source src={demo.src} type="video/mp4" />
           Ваш браузер не поддерживает воспроизведение видео.
         </video>
       </div>
@@ -891,16 +958,52 @@ function InfoBlock({ title, text }) {
   );
 }
 
-function ProjectScreenshot({ compact = false }) {
+function CaseCardMedia({ item }) {
+  if (item.cardMedia === 'chat') {
+    return <ChatMockup compact />;
+  }
+
+  return <ProjectScreenshot screenshot={item.screenshot} compact />;
+}
+
+function CaseGalleryContent({ item, galleryItem, compact = false }) {
+  switch (galleryItem.type) {
+    case 'screenshot':
+      return <ProjectScreenshot screenshot={item.screenshot} compact={compact} />;
+    case 'lead-card':
+      return <LeadCardMockup />;
+    case 'legal-lead-card':
+      return <LegalLeadCardMockup />;
+    case 'flow':
+      return <FlowMockup />;
+    case 'legal-flow':
+      return <LegalFlowMockup />;
+    case 'chat':
+    default:
+      return <ChatMockup compact={compact} />;
+  }
+}
+
+function CasePreviewContent({ previewType }) {
+  switch (previewType) {
+    case 'chat':
+      return <ChatMockup />;
+    case 'lead-card':
+    default:
+      return <LeadCardMockup />;
+  }
+}
+
+function ProjectScreenshot({ screenshot, compact = false }) {
   return (
     <figure className={`project-shot${compact ? ' project-shot--compact' : ''}`}>
       <div className="project-shot__bar">
         <span />
         <span />
         <span />
-        <strong>telegram-landing-gamma.vercel.app</strong>
+        <strong>{screenshot.barLabel}</strong>
       </div>
-      <img src="/case-telegram-landing.png" alt="Скриншот лендинга Telegram-заявочник" />
+      <img src={screenshot.src} alt={screenshot.alt} />
     </figure>
   );
 }
@@ -912,7 +1015,7 @@ function ProjectPanel({ item }) {
         <span>Превью кейса</span>
         <strong>{item.title}</strong>
       </div>
-      <LeadCardMockup />
+      <CasePreviewContent previewType={item.preview} />
     </aside>
   );
 }
@@ -940,6 +1043,64 @@ function FlowMockup() {
       <span>Карточка</span>
       <i />
       <span>Менеджер</span>
+    </div>
+  );
+}
+
+function LegalFlowMockup() {
+  return (
+    <div className="flow-mockup" aria-hidden="true">
+      <span>Telegram</span>
+      <i />
+      <span>Сценарий</span>
+      <i />
+      <span>Supabase</span>
+      <i />
+      <span>Юрист</span>
+    </div>
+  );
+}
+
+function ChatMockup({ compact = false }) {
+  return (
+    <div className={`chat-mockup${compact ? ' chat-mockup--compact' : ''}`} aria-hidden="true">
+      <div className="chat-mockup__header">
+        <span className="chat-mockup__avatar">ПК</span>
+        <div className="chat-mockup__meta">
+          <strong>Правовой компас</strong>
+          <span>бот</span>
+        </div>
+      </div>
+      <div className="chat-mockup__messages">
+        <div className="chat-mockup__msg chat-mockup__msg--bot">
+          Здравствуйте! Выберите направление права или задайте вопрос.
+        </div>
+        <div className="chat-mockup__buttons">
+          <span>Семейное право</span>
+          <span>Трудовые споры</span>
+          <span>Недвижимость</span>
+          <span>Долги</span>
+        </div>
+        <div className="chat-mockup__msg chat-mockup__msg--user">
+          Нужна консультация по разделу имущества при разводе
+        </div>
+        <div className="chat-mockup__msg chat-mockup__msg--bot">
+          Опишите ситуацию своими словами — после этого помогу оформить заявку.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LegalLeadCardMockup() {
+  return (
+    <div className="lead-card lead-card--legal" aria-hidden="true">
+      <span>Новая заявка</span>
+      <strong>Алексей — семейное право</strong>
+      <div>Категория: раздел имущества при разводе</div>
+      <div>Срочность: на этой неделе</div>
+      <div>Телефон: +7 *** ***-**-45</div>
+      <button type="button">Принять в работу</button>
     </div>
   );
 }
