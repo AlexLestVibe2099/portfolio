@@ -1148,11 +1148,20 @@ function LegalLeadCardMockup() {
 
 function ScreenshotSlider({ slides }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
   const total = slides.length;
   const slide = slides[activeIndex];
 
   const goTo = (index) => {
-    setActiveIndex((index + total) % total);
+    const nextIndex = ((index % total) + total) % total;
+    if (nextIndex === activeIndex) return;
+
+    let delta = nextIndex - activeIndex;
+    if (delta > total / 2) delta -= total;
+    if (delta < -total / 2) delta += total;
+
+    setDirection(delta >= 0 ? 1 : -1);
+    setActiveIndex(nextIndex);
   };
 
   return (
@@ -1167,9 +1176,25 @@ function ScreenshotSlider({ slides }) {
               Шаг {activeIndex + 1} из {total}
             </strong>
           </div>
-          <img src={slide.src} alt={slide.alt} loading="lazy" />
+          <div className="case-slider__viewport" aria-live="polite">
+            <div
+              className="case-slider__track"
+              style={{ transform: `translate3d(-${activeIndex * 100}%, 0, 0)` }}
+            >
+              {slides.map((trackSlide) => (
+                <figure className="case-slider__slide" key={trackSlide.src}>
+                  <img src={trackSlide.src} alt={trackSlide.alt} loading="lazy" />
+                </figure>
+              ))}
+            </div>
+          </div>
         </div>
-        <div className="case-slider__caption">
+        <div
+          className={`case-slider__caption case-slider__caption--from-${
+            direction >= 0 ? 'right' : 'left'
+          }`}
+          key={activeIndex}
+        >
           <p className="eyebrow eyebrow--compact">
             Шаг {String(activeIndex + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
           </p>

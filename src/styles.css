@@ -56,6 +56,14 @@ html.reveal-ready [data-reveal].is-visible {
   .faq-item__answer-wrap {
     transition: none;
   }
+
+  .case-slider__track {
+    transition: none;
+  }
+
+  .case-slider__caption {
+    animation: none;
+  }
 }
 
 body {
@@ -1282,6 +1290,31 @@ p {
   box-shadow: 0 26px 80px rgba(0, 0, 0, 0.28);
 }
 
+.case-slider__viewport {
+  overflow: hidden;
+  background: #10151c;
+}
+
+.case-slider__track {
+  display: flex;
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.case-slider__slide {
+  min-width: 100%;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.case-slider__slide img {
+  display: block;
+  width: 100%;
+  max-height: 560px;
+  object-fit: contain;
+  background: #10151c;
+}
+
 .case-slider__bar {
   display: flex;
   align-items: center;
@@ -1314,14 +1347,6 @@ p {
   font-weight: 800;
 }
 
-.case-slider__frame img {
-  display: block;
-  width: 100%;
-  max-height: 560px;
-  object-fit: contain;
-  background: #10151c;
-}
-
 .case-slider__caption {
   display: grid;
   gap: 14px;
@@ -1330,6 +1355,38 @@ p {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: rgba(255, 255, 255, 0.035);
+}
+
+.case-slider__caption--from-right {
+  animation: case-slider-caption-right 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.case-slider__caption--from-left {
+  animation: case-slider-caption-left 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes case-slider-caption-right {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes case-slider-caption-left {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .case-slider__caption h3 {
@@ -1410,7 +1467,11 @@ p {
   font-weight: 800;
   text-align: left;
   cursor: pointer;
-  transition: border-color 180ms ease, color 180ms ease;
+  transition:
+    border-color 220ms ease,
+    color 220ms ease,
+    transform 220ms ease,
+    background 220ms ease;
 }
 
 .case-slider__thumb img {
@@ -1430,6 +1491,7 @@ p {
   border-color: var(--cyan);
   color: var(--text);
   background: rgba(101, 231, 239, 0.08);
+  transform: translateY(-2px);
 }
 
 .demo-box {
@@ -1717,6 +1779,10 @@ p {
   .case-slider__frame img {
     max-height: 460px;
   }
+
+  .case-slider__slide img {
+    max-height: 460px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1812,6 +1878,10 @@ p {
   }
 
   .case-slider__frame img {
+    max-height: 380px;
+  }
+
+  .case-slider__slide img {
     max-height: 380px;
   }
 }
