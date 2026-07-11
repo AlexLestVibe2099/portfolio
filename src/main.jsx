@@ -173,7 +173,7 @@ const portfolio = {
         workTitle: 'Бот, который собирает заявку и отвечает на типовые вопросы',
         resultsTitle: 'Юрист получает структурированную заявку, а клиент — быстрый ответ',
       },
-      preview: 'chat',
+      preview: 'screenshot',
       gallery: [
         { title: 'Диалог с ботом', type: 'chat' },
         { title: 'Карточка для юриста', type: 'legal-lead-card' },
