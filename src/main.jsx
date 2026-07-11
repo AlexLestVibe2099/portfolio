@@ -162,11 +162,11 @@ const portfolio = {
       url: LEGAL_BOT_URL,
       tags: ['Telegram-бот', 'AI', 'Supabase'],
       productCta: 'Открыть бота в Telegram',
-      cardMedia: 'chat',
+      cardMedia: 'screenshot',
       screenshot: {
-        src: '/case-legal-bot.png',
-        alt: 'Скриншот Telegram-бота юридических консультаций',
-        barLabel: 't.me',
+        src: '/case-legal-bot-02-ai.png',
+        alt: 'Диалог с ботом юридических консультаций: AI-ассистент отвечает на вопрос клиента',
+        barLabel: 'Правовой компас — Telegram',
       },
       demo: null,
       sections: {
@@ -178,6 +178,36 @@ const portfolio = {
         { title: 'Диалог с ботом', type: 'chat' },
         { title: 'Карточка для юриста', type: 'legal-lead-card' },
         { title: 'Путь пользователя', type: 'legal-flow' },
+      ],
+      slides: [
+        {
+          src: '/case-legal-bot-01-start.png',
+          alt: 'Стартовый экран бота «Правовой компас» с описанием возможностей',
+          title: 'Старт и приветствие',
+          description:
+            'Клиент открывает бота и сразу видит, чем он помогает: направления права, как работает запись и что бот не заменяет консультацию юриста — только помогает оформить обращение.',
+        },
+        {
+          src: '/case-legal-bot-02-ai.png',
+          alt: 'AI-ассистент отвечает на вопрос о сделке с недвижимостью',
+          title: 'Вопрос AI-ассистенту',
+          description:
+            'Можно задать вопрос своими словами. AI-ассистент «Правовой компас» разбирает ситуацию, даёт пошаговый ориентир, называет стоимость услуг и предлагает записаться на консультацию.',
+        },
+        {
+          src: '/case-legal-bot-03-wizard.png',
+          alt: 'Пошаговый сценарий оформления заявки: срочность, документы, контакт и подтверждение',
+          title: 'Оформление заявки по шагам',
+          description:
+            'Бот последовательно уточняет срочность, наличие документов, удобный способ связи, имя и телефон. В конце показывает карточку заявки для проверки — клиент подтверждает данные одной кнопкой.',
+        },
+        {
+          src: '/case-legal-bot-04-lead.png',
+          alt: 'Карточка новой заявки у менеджера в Telegram с контактами и командой юристов',
+          title: 'Заявка у менеджера',
+          description:
+            'Менеджер мгновенно получает готовую карточку в Telegram: имя, телефон, ссылка на чат, категория, срочность, описание и подходящая команда юристов. Заявка параллельно сохраняется в базе Supabase.',
+        },
       ],
     },
   ],
@@ -259,6 +289,7 @@ function useScrollReveal(route) {
         '.gallery-frame',
         '.demo-box',
         '.project-panel',
+        '.case-slider',
       ].join(', ')
     );
 
@@ -870,19 +901,29 @@ function CasePage({ item }) {
         </div>
       </section>
 
-      <section className="section gallery-section">
-        <div className="section-head">
-          <p className="eyebrow">03 / Скриншоты</p>
-          <h2>Визуальные фрагменты проекта</h2>
-        </div>
-        <div className="gallery">
-          {item.gallery.map((galleryItem) => (
-            <GalleryFrame title={galleryItem.title} key={galleryItem.title}>
-              <CaseGalleryContent item={item} galleryItem={galleryItem} compact />
-            </GalleryFrame>
-          ))}
-        </div>
-      </section>
+      {item.slides ? (
+        <section className="section slider-section">
+          <div className="section-head">
+            <p className="eyebrow">03 / Как работает бот</p>
+            <h2>От первого сообщения до заявки у менеджера — по шагам</h2>
+          </div>
+          <ScreenshotSlider slides={item.slides} />
+        </section>
+      ) : (
+        <section className="section gallery-section">
+          <div className="section-head">
+            <p className="eyebrow">03 / Скриншоты</p>
+            <h2>Визуальные фрагменты проекта</h2>
+          </div>
+          <div className="gallery">
+            {item.gallery.map((galleryItem) => (
+              <GalleryFrame title={galleryItem.title} key={galleryItem.title}>
+                <CaseGalleryContent item={item} galleryItem={galleryItem} compact />
+              </GalleryFrame>
+            ))}
+          </div>
+        </section>
+      )}
 
       {item.demo && (
         <section className="section demo-section">
@@ -1101,6 +1142,86 @@ function LegalLeadCardMockup() {
       <div>Срочность: на этой неделе</div>
       <div>Телефон: +7 *** ***-**-45</div>
       <button type="button">Принять в работу</button>
+    </div>
+  );
+}
+
+function ScreenshotSlider({ slides }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const total = slides.length;
+  const slide = slides[activeIndex];
+
+  const goTo = (index) => {
+    setActiveIndex((index + total) % total);
+  };
+
+  return (
+    <div className="case-slider" role="group" aria-roledescription="Слайдер скриншотов">
+      <div className="case-slider__stage">
+        <div className="case-slider__frame">
+          <div className="case-slider__bar">
+            <span />
+            <span />
+            <span />
+            <strong>
+              Шаг {activeIndex + 1} из {total}
+            </strong>
+          </div>
+          <img src={slide.src} alt={slide.alt} loading="lazy" />
+        </div>
+        <div className="case-slider__caption">
+          <p className="eyebrow eyebrow--compact">
+            Шаг {String(activeIndex + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+          </p>
+          <h3>{slide.title}</h3>
+          <p>{slide.description}</p>
+          <div className="case-slider__controls">
+            <button
+              className="case-slider__arrow"
+              type="button"
+              aria-label="Предыдущий скриншот"
+              onClick={() => goTo(activeIndex - 1)}
+            >
+              ←
+            </button>
+            <div className="case-slider__dots" role="tablist" aria-label="Скриншоты по шагам">
+              {slides.map((dot, index) => (
+                <button
+                  key={dot.title}
+                  type="button"
+                  role="tab"
+                  aria-selected={index === activeIndex}
+                  aria-label={`Шаг ${index + 1}: ${dot.title}`}
+                  className={`case-slider__dot${index === activeIndex ? ' is-active' : ''}`}
+                  onClick={() => goTo(index)}
+                />
+              ))}
+            </div>
+            <button
+              className="case-slider__arrow"
+              type="button"
+              aria-label="Следующий скриншот"
+              onClick={() => goTo(activeIndex + 1)}
+            >
+              →
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="case-slider__thumbs">
+        {slides.map((thumb, index) => (
+          <button
+            key={thumb.title}
+            type="button"
+            className={`case-slider__thumb${index === activeIndex ? ' is-active' : ''}`}
+            aria-label={`Показать шаг ${index + 1}: ${thumb.title}`}
+            onClick={() => goTo(index)}
+          >
+            <img src={thumb.src} alt="" loading="lazy" />
+            <span>{thumb.title}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
