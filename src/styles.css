@@ -954,6 +954,14 @@ p {
   gap: 26px;
 }
 
+.case-hero__visual {
+  min-height: 420px;
+}
+
+.case-hero__visual img {
+  min-height: 420px;
+}
+
 .project-panel {
   display: grid;
   gap: 20px;

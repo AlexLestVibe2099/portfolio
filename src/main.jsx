@@ -173,7 +173,22 @@ const portfolio = {
         workTitle: 'Бот, который собирает заявку и отвечает на типовые вопросы',
         resultsTitle: 'Юрист получает структурированную заявку, а клиент — быстрый ответ',
       },
-      preview: 'screenshot',
+      heroVisual: {
+        src: '/case-legal-bot-hero.png',
+        alt: 'Telegram-бот с AI-ассистентом, CRM и аналитикой заявок',
+        cards: [
+          {
+            position: 'top',
+            label: 'Стек проекта',
+            text: 'Telegram + AI + Supabase + CRM',
+          },
+          {
+            position: 'bottom',
+            label: 'Фокус',
+            text: 'Заявка и ответ клиенту в одном чате',
+          },
+        ],
+      },
       gallery: [
         { title: 'Диалог с ботом', type: 'chat' },
         { title: 'Карточка для юриста', type: 'legal-lead-card' },
@@ -289,6 +304,7 @@ function useScrollReveal(route) {
         '.gallery-frame',
         '.demo-box',
         '.project-panel',
+        '.case-hero__visual',
         '.case-slider',
       ].join(', ')
     );
@@ -859,7 +875,7 @@ function CasePage({ item }) {
               </a>
             </div>
           </div>
-          <ProjectPanel item={item} />
+          {item.heroVisual ? <CaseHeroVisual visual={item.heroVisual} /> : <ProjectPanel item={item} />}
         </div>
       </section>
 
@@ -1033,6 +1049,23 @@ function CasePreviewContent({ previewType }) {
     default:
       return <LeadCardMockup />;
   }
+}
+
+function CaseHeroVisual({ visual }) {
+  return (
+    <div className="hero__visual case-hero__visual" aria-label={visual.alt}>
+      <img src={visual.src} alt={visual.alt} />
+      {visual.cards?.map((card) => (
+        <div
+          className={`hero-card hero-card--${card.position}`}
+          key={card.label}
+        >
+          <span>{card.label}</span>
+          <strong>{card.text}</strong>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function ProjectScreenshot({ screenshot, compact = false }) {
