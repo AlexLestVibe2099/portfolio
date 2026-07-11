@@ -24,7 +24,7 @@ const portfolio = {
     )}&body=${encodeURIComponent(LEAD_TEMPLATE)}`,
   },
   stats: [
-    { value: '2+', label: 'готовых кейса в портфолио' },
+    { value: '3+', label: 'готовых кейса в портфолио' },
     { value: '3–7 дней', label: 'типичный срок запуска' },
     { value: 'от 5 000 ₽', label: 'стартовый проект под ключ' },
   ],
@@ -225,6 +225,101 @@ const portfolio = {
         },
       ],
     },
+    {
+      id: 'beige-studio-landing',
+      title: 'Лендинг для студии маникюра',
+      label: 'Одностраничный сайт',
+      audience:
+        'Для мастеров маникюра, бровей и небольших бьюти-студий, у которых нет своего сайта — запись обычно велась через директ и сторис в Instagram.',
+      problem:
+        'Заявки терялись в сообщениях и сторис, у клиента не было единого места с ценами, портфолио работ и понятным способом записаться.',
+      before:
+        'До сайта студия существовала только в соцсетях: цены уточняли в директе, портфолио — разрозненные фото в сторис, а новым клиентам было сложно понять весь ассортимент услуг с первого взгляда.',
+      work: [
+        'Собрана структура «оффер → мастер → цены → портфолио → отзывы → запись», которая закрывает вопросы клиента по порядку, без лишних сообщений в директ.',
+        'Портфолио работ оформлено единой сеткой с подписями по типу услуги, чтобы клиент сразу видел уровень и стиль мастера.',
+        'Секция записи вынесена отдельным блоком с расписанием, адресом и контактами — кнопка «Записаться» с любого места страницы ведёт прямо туда.',
+      ],
+      results: [
+        'Клиент получает ответы на все вопросы — цена, результат, как записаться — на одном экране, не переписываясь в директе.',
+        'Портфолио работает как самостоятельный аргумент «за» запись, не хуже сторис в Instagram.',
+        'Сайт полностью адаптирован под телефон — большинство клиентов бьюти-сферы бронируют именно с мобильного.',
+      ],
+      metrics: [
+        { value: '7 секций', label: 'от знакомства до записи' },
+        { value: '100%', label: 'адаптивная вёрстка под телефон' },
+        { value: '1 клик', label: 'до контактов студии с любого экрана' },
+      ],
+      url: '#/beige-studio',
+      tags: ['Лендинг', 'Одностраничник', 'Бьюти'],
+      productCta: 'Открыть лендинг',
+      cardMedia: 'screenshot',
+      screenshot: {
+        src: '/beige-studio-hero.png',
+        alt: 'Мастер наносит гель-лак на ногти клиентки в светлой студии Beige Studio',
+        barLabel: 'beige-studio.ru',
+      },
+      demo: null,
+      sections: {
+        workTitle: 'Лендинг, который отвечает на вопросы клиента без переписки в директе',
+        resultsTitle: 'Портфолио и цены работают как самостоятельный повод записаться',
+        sliderEyebrow: '03 / Портфолио',
+        sliderTitle: 'Работы студии — по категориям услуг',
+      },
+      heroVisual: {
+        src: '/beige-studio-hero.png',
+        alt: 'Мастер наносит гель-лак на ногти клиентки в светлой студии Beige Studio',
+        cards: [
+          {
+            position: 'top',
+            label: 'Формат',
+            text: 'Одностраничный сайт под телефон и десктоп',
+          },
+          {
+            position: 'bottom',
+            label: 'Фокус',
+            text: 'От оффера до записи в один клик',
+          },
+        ],
+      },
+      slides: [
+        {
+          src: '/beige-studio-nails-1.png',
+          alt: 'Маникюр в нюдовом оттенке с эффектом стеклянных ногтей',
+          title: 'Glazed-эффект',
+          description:
+            'Один из самых частых запросов клиентов — полупрозрачное нюдовое покрытие с эффектом «стеклянных» ногтей. В портфолио показано крупным планом, чтобы передать текстуру покрытия.',
+        },
+        {
+          src: '/beige-studio-nails-2.png',
+          alt: 'Французский маникюр с тонкой золотой линией',
+          title: 'French с акцентом',
+          description:
+            'Классический french получает современный акцент — тонкая золотая линия на границе улыбки. Такие детали в портфолио помогают клиенту выбрать дизайн ещё до визита.',
+        },
+        {
+          src: '/beige-studio-nails-3.png',
+          alt: 'Нюдовый маникюр на двух руках рядом с чашкой кофе',
+          title: 'Классический нюд',
+          description:
+            'Лайфстайл-кадр показывает готовый маникюр в повседневной обстановке — это работает лучше, чем сухое фото на белом фоне, и помогает клиенту представить результат на себе.',
+        },
+        {
+          src: '/beige-studio-brows.png',
+          alt: 'Оформленные брови после коррекции и укладки',
+          title: 'Оформление бровей',
+          description:
+            'Отдельная категория портфолио — брови после коррекции и укладки. Крупный план демонстрирует чёткость формы и естественный результат.',
+        },
+        {
+          src: '/beige-studio-lashes.png',
+          alt: 'Ресницы после ламинирования крупным планом',
+          title: 'Ламинирование ресниц',
+          description:
+            'Ламинирование — услуга, результат которой сложно передать словами, поэтому в портфолио есть отдельный крупный кадр с макро-деталью ресниц после процедуры.',
+        },
+      ],
+    },
   ],
 };
 
@@ -306,6 +401,7 @@ function useScrollReveal(route) {
         '.project-panel',
         '.case-hero__visual',
         '.case-slider',
+        '.bs-reveal',
       ].join(', ')
     );
 
@@ -345,6 +441,7 @@ function useScrollReveal(route) {
 
 function App() {
   const route = useHashRoute();
+  const isProductRoute = route === '/beige-studio';
   const selectedCase = useMemo(() => {
     const match = route.match(/^\/case\/(.+)$/);
     if (!match) return null;
@@ -354,10 +451,10 @@ function App() {
   useYandexMetrika();
 
   useEffect(() => {
-    if (route === '/' || route.startsWith('/case/')) {
+    if (route === '/' || route.startsWith('/case/') || isProductRoute) {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
-  }, [route]);
+  }, [route, isProductRoute]);
 
   useEffect(() => {
     const ogUrl = document.querySelector('meta[property="og:url"]');
@@ -372,8 +469,14 @@ function App() {
 
   return (
     <>
-      <Header />
-      {selectedCase ? <CasePage item={selectedCase} /> : <HomePage />}
+      {!isProductRoute && <Header />}
+      {isProductRoute ? (
+        <BeigeStudioLanding />
+      ) : selectedCase ? (
+        <CasePage item={selectedCase} />
+      ) : (
+        <HomePage />
+      )}
     </>
   );
 }
@@ -920,8 +1023,8 @@ function CasePage({ item }) {
       {item.slides ? (
         <section className="section slider-section">
           <div className="section-head">
-            <p className="eyebrow">03 / Как работает бот</p>
-            <h2>От первого сообщения до заявки у менеджера — по шагам</h2>
+            <p className="eyebrow">{item.sections.sliderEyebrow || '03 / Как работает бот'}</p>
+            <h2>{item.sections.sliderTitle || 'От первого сообщения до заявки у менеджера — по шагам'}</h2>
           </div>
           <ScreenshotSlider slides={item.slides} />
         </section>
@@ -1293,6 +1396,275 @@ function GalleryFrame({ title, children }) {
       </div>
       {children}
     </article>
+  );
+}
+
+const beigeStudioServices = [
+  {
+    title: 'Маникюр с покрытием',
+    price: 'от 2 200 ₽',
+    description:
+      'Обработка кутикулы, коррекция формы, покрытие гель-лаком в один или два слоя.',
+  },
+  {
+    title: 'Педикюр аппаратный',
+    price: 'от 2 800 ₽',
+    description:
+      'Полная обработка стопы, удаление огрубевшей кожи, покрытие по желанию.',
+  },
+  {
+    title: 'Оформление бровей',
+    price: 'от 1 200 ₽',
+    description:
+      'Коррекция формы, окрашивание хной или краской, ламинирование по запросу.',
+  },
+  {
+    title: 'Ламинирование ресниц',
+    price: 'от 1 800 ₽',
+    description:
+      'Изгиб и объём своих ресниц без наращивания — эффект держится 4–6 недель.',
+  },
+];
+
+const beigeStudioPortfolio = [
+  {
+    src: '/beige-studio-nails-1.png',
+    alt: 'Маникюр в нюдовом оттенке с эффектом стеклянных ногтей',
+    caption: 'Glazed-эффект',
+  },
+  {
+    src: '/beige-studio-nails-2.png',
+    alt: 'Французский маникюр с тонкой золотой линией',
+    caption: 'French с акцентом',
+  },
+  {
+    src: '/beige-studio-nails-3.png',
+    alt: 'Нюдовый маникюр на двух руках рядом с чашкой кофе',
+    caption: 'Классический нюд',
+  },
+  {
+    src: '/beige-studio-brows.png',
+    alt: 'Оформленные брови после коррекции и укладки',
+    caption: 'Оформление бровей',
+  },
+  {
+    src: '/beige-studio-lashes.png',
+    alt: 'Ресницы после ламинирования крупным планом',
+    caption: 'Ламинирование ресниц',
+  },
+];
+
+const beigeStudioReviews = [
+  {
+    name: 'Анна',
+    initials: 'А',
+    text: '«Хожу уже год, покрытие держится по 3 недели без сколов. Всегда подберут оттенок под настроение.»',
+  },
+  {
+    name: 'Мария',
+    initials: 'М',
+    text: '«Впервые сделала ламинирование бровей — эффект держится дольше, чем обещали в других местах.»',
+  },
+  {
+    name: 'Екатерина',
+    initials: 'Е',
+    text: '«Атмосфера в студии очень расслабляющая, никогда не торопят. Форма ногтей — просто идеальная.»',
+  },
+];
+
+function BeigeStudioLanding() {
+  const scrollToSection = (id) => (event) => {
+    event.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const scrollToContacts = scrollToSection('bs-contacts');
+
+  const scrollToTop = (event) => {
+    event.preventDefault();
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="bs-page">
+      <header className="bs-header">
+        <div className="bs-header__inner">
+          <a className="bs-brand" href="#bs-hero" onClick={scrollToTop}>
+            <span className="bs-brand__mark">BS</span>
+            <span>Beige Studio</span>
+          </a>
+          <nav className="bs-nav" aria-label="Навигация по сайту студии">
+            <a href="#bs-services" onClick={scrollToSection('bs-services')}>
+              Услуги
+            </a>
+            <a href="#bs-portfolio" onClick={scrollToSection('bs-portfolio')}>
+              Работы
+            </a>
+            <a href="#bs-reviews" onClick={scrollToSection('bs-reviews')}>
+              Отзывы
+            </a>
+            <a href="#bs-contacts" onClick={scrollToSection('bs-contacts')}>
+              Контакты
+            </a>
+          </nav>
+          <button className="bs-button bs-button--primary" type="button" onClick={scrollToContacts}>
+            Записаться
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section className="bs-hero" id="bs-hero">
+          <div className="bs-hero__copy bs-reveal">
+            <p className="bs-eyebrow">Студия маникюра и бровей</p>
+            <h1>Уход за собой в спокойном, уютном темпе</h1>
+            <p className="bs-hero__lead">
+              Маникюр, педикюр, брови и ресницы — в одном месте, где не торопят и всё по-настоящему
+              аккуратно.
+            </p>
+            <div className="bs-hero__actions">
+              <button className="bs-button bs-button--primary" type="button" onClick={scrollToContacts}>
+                Записаться на процедуру
+              </button>
+              <a
+                className="bs-button bs-button--ghost"
+                href="#bs-services"
+                onClick={scrollToSection('bs-services')}
+              >
+                Смотреть цены
+              </a>
+            </div>
+          </div>
+          <figure className="bs-hero__visual bs-reveal">
+            <img
+              src="/beige-studio-hero.png"
+              alt="Мастер наносит гель-лак на ногти клиентки в светлой студии"
+            />
+          </figure>
+        </section>
+
+        <section className="bs-about" id="bs-about">
+          <figure className="bs-about__photo bs-reveal">
+            <img
+              src="/beige-studio-master.png"
+              alt="Мастер студии Beige Studio с инструментами в руках"
+            />
+          </figure>
+          <div className="bs-about__text bs-reveal">
+            <p className="bs-eyebrow">О мастере</p>
+            <h2>7 лет в бьюти-индустрии и любовь к деталям</h2>
+            <p>
+              Работаю с маникюром, покрытием и оформлением бровей с 2017 года, регулярно прохожу
+              обучение у российских и корейских мастеров. Использую только сертифицированные
+              материалы и одноразовые расходники.
+            </p>
+            <p>
+              Приём — по записи, без спешки: на каждую процедуру закладываю достаточно времени, чтобы
+              результат держался долго и выглядел аккуратно даже спустя три недели.
+            </p>
+          </div>
+        </section>
+
+        <section className="bs-services" id="bs-services">
+          <div className="bs-section-head bs-reveal">
+            <p className="bs-eyebrow">Услуги и цены</p>
+            <h2>Можно выбрать одну процедуру или прийти на комплекс</h2>
+          </div>
+          <div className="bs-services__grid">
+            {beigeStudioServices.map((service) => (
+              <article className="bs-service-card bs-reveal" key={service.title}>
+                <div className="bs-service-card__head">
+                  <h3>{service.title}</h3>
+                  <strong>{service.price}</strong>
+                </div>
+                <p>{service.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="bs-portfolio" id="bs-portfolio">
+          <div className="bs-section-head bs-reveal">
+            <p className="bs-eyebrow">Портфолио работ</p>
+            <h2>Аккуратные формы, спокойные цвета, чистая линия</h2>
+          </div>
+          <div className="bs-portfolio__grid">
+            {beigeStudioPortfolio.map((photo) => (
+              <figure className="bs-portfolio__item bs-reveal" key={photo.src}>
+                <img src={photo.src} alt={photo.alt} loading="lazy" />
+                <figcaption>{photo.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <section className="bs-atmosphere bs-reveal">
+          <img
+            className="bs-atmosphere__photo"
+            src="/beige-studio-lifestyle.png"
+            alt="Чашка кофе в руках клиентки после маникюра"
+            loading="lazy"
+          />
+          <div className="bs-atmosphere__text">
+            <p className="bs-eyebrow">Атмосфера</p>
+            <h2>Полчаса для себя — без спешки и лишних разговоров</h2>
+          </div>
+        </section>
+
+        <section className="bs-reviews" id="bs-reviews">
+          <div className="bs-section-head bs-reveal">
+            <p className="bs-eyebrow">Отзывы</p>
+            <h2>Что говорят клиентки после визита</h2>
+          </div>
+          <div className="bs-reviews__grid">
+            {beigeStudioReviews.map((review) => (
+              <article className="bs-review-card bs-reveal" key={review.name}>
+                <span className="bs-review-card__avatar">{review.initials}</span>
+                <p>{review.text}</p>
+                <strong>{review.name}</strong>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="bs-contacts" id="bs-contacts">
+          <figure className="bs-contacts__visual bs-reveal">
+            <img src="/beige-studio-interior.png" alt="Интерьер студии Beige Studio" loading="lazy" />
+          </figure>
+          <div className="bs-contacts__info bs-reveal">
+            <p className="bs-eyebrow">Запись и контакты</p>
+            <h2>Ждём вас в студии на Тверской</h2>
+            <ul className="bs-contacts__list">
+              <li>
+                <span>Адрес</span>
+                <strong>Москва, ул. Тверская, 14, студия 3</strong>
+              </li>
+              <li>
+                <span>Часы работы</span>
+                <strong>Ежедневно, 10:00–21:00</strong>
+              </li>
+              <li>
+                <span>Телефон</span>
+                <a href="tel:+79993221405">+7 (999) 322-14-05</a>
+              </li>
+              <li>
+                <span>Telegram</span>
+                <strong>@beige.studio</strong>
+              </li>
+            </ul>
+            <p className="bs-contacts__note">
+              Свяжитесь по телефону или в Telegram — подберём удобное время и мастера под вашу
+              процедуру.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <footer className="bs-footer">
+        <span>© {new Date().getFullYear()} Beige Studio</span>
+        <span>Маникюр · Педикюр · Брови · Ресницы</span>
+      </footer>
+    </div>
   );
 }
 
