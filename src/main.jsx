@@ -1472,44 +1472,268 @@ const beigeStudioReviews = [
   },
 ];
 
+/** Placeholder for the client’s real Telegram — replace url (and label if needed) when handing off. */
+const BEIGE_STUDIO_TELEGRAM = {
+  label: '@beige.studio',
+  url: 'https://t.me/beige_studio',
+};
+
+const BEIGE_STUDIO_NAV = [
+  { id: 'bs-services', label: 'Услуги' },
+  { id: 'bs-portfolio', label: 'Работы' },
+  { id: 'bs-reviews', label: 'Отзывы' },
+  { id: 'bs-contacts', label: 'Контакты' },
+];
+
+function BeigeStudioBookingForm({ onClose }) {
+  const [form, setForm] = useState({
+    name: '',
+    contact: '',
+    service: beigeStudioServices[0]?.title || '',
+    honeypot: '',
+  });
+  const [submitState, setSubmitState] = useState('idle');
+  const [status, setStatus] = useState('');
+
+  const handleChange = (field) => (event) => {
+    setForm((current) => ({ ...current, [field]: event.target.value }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!form.contact.trim() || !form.service.trim()) {
+      setSubmitState('error');
+      setStatus('Укажите контакт и выберите услугу.');
+      return;
+    }
+
+    setSubmitState('submitting');
+    setStatus('Отправляю заявку...');
+
+    const task = `Запись на услугу «${form.service.trim()}».`;
+
+    try {
+      const response = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          contact: form.contact.trim(),
+          task,
+          serviceTitle: form.service.trim(),
+          source: 'beige-studio',
+          honeypot: form.honeypot,
+        }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok || !payload.ok) {
+        throw new Error(payload.error || 'Не удалось отправить заявку.');
+      }
+
+      setSubmitState('success');
+      setStatus('Заявка принята. Мы свяжемся с вами, чтобы подтвердить время.');
+      setForm({
+        name: '',
+        contact: '',
+        service: beigeStudioServices[0]?.title || '',
+        honeypot: '',
+      });
+    } catch (error) {
+      setSubmitState('error');
+      setStatus(
+        error instanceof Error && error.message
+          ? error.message
+          : 'Не удалось отправить заявку.'
+      );
+    }
+  };
+
+  if (submitState === 'success') {
+    return (
+      <div className="bs-booking__success" role="status" aria-live="polite">
+        <strong>Заявка принята</strong>
+        <p>{status}</p>
+        <button className="bs-button bs-button--primary" type="button" onClick={onClose}>
+          Закрыть
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form className="bs-booking__form" onSubmit={handleSubmit}>
+      <label className="bs-booking__honeypot" aria-hidden="true">
+        <span>Оставьте поле пустым</span>
+        <input
+          type="text"
+          name="company"
+          tabIndex={-1}
+          autoComplete="off"
+          value={form.honeypot}
+          onChange={handleChange('honeypot')}
+        />
+      </label>
+      <label className="bs-booking__field">
+        <span>Имя</span>
+        <input
+          type="text"
+          name="name"
+          value={form.name}
+          placeholder="Как к вам обращаться"
+          onChange={handleChange('name')}
+          autoComplete="name"
+        />
+      </label>
+      <label className="bs-booking__field">
+        <span>Телефон или Telegram</span>
+        <input
+          type="text"
+          name="contact"
+          value={form.contact}
+          placeholder="+7 … или @username"
+          onChange={handleChange('contact')}
+          autoComplete="tel"
+          required
+        />
+      </label>
+      <label className="bs-booking__field">
+        <span>Услуга</span>
+        <select name="service" value={form.service} onChange={handleChange('service')} required>
+          {beigeStudioServices.map((service) => (
+            <option key={service.title} value={service.title}>
+              {service.title} — {service.price}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button
+        className="bs-button bs-button--primary bs-booking__submit"
+        type="submit"
+        disabled={submitState === 'submitting'}
+      >
+        {submitState === 'submitting' ? 'Отправка...' : 'Отправить заявку'}
+      </button>
+      {status && (
+        <p className="bs-booking__status" aria-live="polite">
+          {status}
+        </p>
+      )}
+    </form>
+  );
+}
+
+const BEIGE_BOOKING_CLOSE_MS = 420;
+
 function BeigeStudioLanding() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [bookingMounted, setBookingMounted] = useState(false);
+  const [bookingClosing, setBookingClosing] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
+  const openBooking = () => {
+    closeMenu();
+    setBookingClosing(false);
+    setBookingMounted(true);
+  };
+  const closeBooking = () => {
+    if (!bookingMounted || bookingClosing) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setBookingMounted(false);
+      setBookingClosing(false);
+      return;
+    }
+    setBookingClosing(true);
+  };
+
   const scrollToSection = (id) => (event) => {
     event.preventDefault();
+    closeMenu();
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const scrollToContacts = scrollToSection('bs-contacts');
-
   const scrollToTop = (event) => {
     event.preventDefault();
+    closeMenu();
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
 
+  useEffect(() => {
+    if (!bookingClosing) return undefined;
+    const timer = window.setTimeout(() => {
+      setBookingMounted(false);
+      setBookingClosing(false);
+    }, BEIGE_BOOKING_CLOSE_MS);
+    return () => window.clearTimeout(timer);
+  }, [bookingClosing]);
+
+  useEffect(() => {
+    if (!bookingMounted && !menuOpen) return undefined;
+
+    const onKeyDown = (event) => {
+      if (event.key !== 'Escape') return;
+      if (bookingMounted) {
+        if (bookingClosing) return;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+          setBookingMounted(false);
+          setBookingClosing(false);
+          return;
+        }
+        setBookingClosing(true);
+        return;
+      }
+      setMenuOpen(false);
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [bookingMounted, bookingClosing, menuOpen]);
+
+  useEffect(() => {
+    if (!bookingMounted) return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [bookingMounted]);
+
   return (
     <div className="bs-page">
-      <header className="bs-header">
+      <header className={`bs-header${menuOpen ? ' is-menu-open' : ''}`}>
         <div className="bs-header__inner">
           <a className="bs-brand" href="#bs-hero" onClick={scrollToTop}>
             <span className="bs-brand__mark">BS</span>
             <span>Beige Studio</span>
           </a>
-          <nav className="bs-nav" aria-label="Навигация по сайту студии">
-            <a href="#bs-services" onClick={scrollToSection('bs-services')}>
-              Услуги
-            </a>
-            <a href="#bs-portfolio" onClick={scrollToSection('bs-portfolio')}>
-              Работы
-            </a>
-            <a href="#bs-reviews" onClick={scrollToSection('bs-reviews')}>
-              Отзывы
-            </a>
-            <a href="#bs-contacts" onClick={scrollToSection('bs-contacts')}>
-              Контакты
-            </a>
+          <nav className="bs-nav" aria-label="Навигация по сайту студии" id="bs-nav">
+            {BEIGE_STUDIO_NAV.map((item) => (
+              <a key={item.id} href={`#${item.id}`} onClick={scrollToSection(item.id)}>
+                {item.label}
+              </a>
+            ))}
           </nav>
-          <button className="bs-button bs-button--primary" type="button" onClick={scrollToContacts}>
-            Записаться
-          </button>
+          <div className="bs-header__actions">
+            <button className="bs-button bs-button--primary" type="button" onClick={openBooking}>
+              Записаться
+            </button>
+            <button
+              className="bs-menu-toggle"
+              type="button"
+              aria-expanded={menuOpen}
+              aria-controls="bs-nav"
+              aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -1523,7 +1747,7 @@ function BeigeStudioLanding() {
               аккуратно.
             </p>
             <div className="bs-hero__actions">
-              <button className="bs-button bs-button--primary" type="button" onClick={scrollToContacts}>
+              <button className="bs-button bs-button--primary" type="button" onClick={openBooking}>
                 Записаться на процедуру
               </button>
               <a
@@ -1649,13 +1873,17 @@ function BeigeStudioLanding() {
               </li>
               <li>
                 <span>Telegram</span>
-                <strong>@beige.studio</strong>
+                <a href={BEIGE_STUDIO_TELEGRAM.url} target="_blank" rel="noreferrer">
+                  {BEIGE_STUDIO_TELEGRAM.label}
+                </a>
               </li>
             </ul>
             <p className="bs-contacts__note">
-              Свяжитесь по телефону или в Telegram — подберём удобное время и мастера под вашу
-              процедуру.
+              Свяжитесь по телефону или в Telegram — подберём удобное время под вашу процедуру.
             </p>
+            <button className="bs-button bs-button--primary" type="button" onClick={openBooking}>
+              Записаться онлайн
+            </button>
           </div>
         </section>
       </main>
@@ -1664,6 +1892,41 @@ function BeigeStudioLanding() {
         <span>© {new Date().getFullYear()} Beige Studio</span>
         <span>Маникюр · Педикюр · Брови · Ресницы</span>
       </footer>
+
+      {bookingMounted && (
+        <div
+          className={`bs-booking${bookingClosing ? ' is-closing' : ''}`}
+          role="presentation"
+        >
+          <button
+            className="bs-booking__backdrop"
+            type="button"
+            aria-label="Закрыть форму записи"
+            onClick={closeBooking}
+            disabled={bookingClosing}
+          />
+          <div
+            className="bs-booking__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bs-booking-title"
+          >
+            <div className="bs-booking__head">
+              <h2 id="bs-booking-title">Запись на процедуру</h2>
+              <button
+                className="bs-booking__close"
+                type="button"
+                aria-label="Закрыть"
+                onClick={closeBooking}
+                disabled={bookingClosing}
+              >
+                ×
+              </button>
+            </div>
+            <BeigeStudioBookingForm onClose={closeBooking} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
