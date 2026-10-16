@@ -5,6 +5,8 @@ import './styles.css';
 const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://your-portfolio.vercel.app';
 const YM_COUNTER_ID = import.meta.env.VITE_YM_COUNTER_ID || '';
 const LEGAL_BOT_URL = import.meta.env.VITE_LEGAL_BOT_URL || 'https://t.me/';
+const BARBERSHOP_BOT_URL =
+  import.meta.env.VITE_BARBERSHOP_BOT_URL || 'https://t.me/PriemZapisi_online_bot';
 
 const LEAD_TEMPLATE =
   'Здравствуйте! Хочу обсудить проект.\n\nЗадача: \nДля кого сайт/бот: \nСрок: \nБюджет: ';
@@ -24,7 +26,7 @@ const portfolio = {
     )}&body=${encodeURIComponent(LEAD_TEMPLATE)}`,
   },
   stats: [
-    { value: '3+', label: 'готовых кейса в портфолио' },
+    { value: '4+', label: 'готовых кейса в портфолио' },
     { value: '3–7 дней', label: 'типичный срок запуска' },
     { value: 'от 5 000 ₽', label: 'стартовый проект под ключ' },
   ],
@@ -172,6 +174,9 @@ const portfolio = {
       sections: {
         workTitle: 'Бот, который собирает заявку и отвечает на типовые вопросы',
         resultsTitle: 'Юрист получает структурированную заявку, а клиент — быстрый ответ',
+        sliderEyebrow: '03 / Как работает бот',
+        sliderTitle: 'Как выглядит сценарий в Telegram',
+        sliderLayout: 'shots',
       },
       heroVisual: {
         src: '/case-legal-bot-hero.png',
@@ -198,30 +203,26 @@ const portfolio = {
         {
           src: '/case-legal-bot-01-start.png',
           alt: 'Стартовый экран бота «Правовой компас» с описанием возможностей',
-          title: 'Старт и приветствие',
-          description:
-            'Клиент открывает бота и сразу видит, чем он помогает: направления права, как работает запись и что бот не заменяет консультацию юриста — только помогает оформить обращение.',
+          title: 'Старт',
+          description: 'Что умеет бот и как начать.',
         },
         {
           src: '/case-legal-bot-02-ai.png',
           alt: 'AI-ассистент отвечает на вопрос о сделке с недвижимостью',
-          title: 'Вопрос AI-ассистенту',
-          description:
-            'Можно задать вопрос своими словами. AI-ассистент «Правовой компас» разбирает ситуацию, даёт пошаговый ориентир, называет стоимость услуг и предлагает записаться на консультацию.',
+          title: 'AI-ответ',
+          description: 'Вопрос своими словами и ориентир по шагам.',
         },
         {
           src: '/case-legal-bot-03-wizard.png',
           alt: 'Пошаговый сценарий оформления заявки: срочность, документы, контакт и подтверждение',
-          title: 'Оформление заявки по шагам',
-          description:
-            'Бот последовательно уточняет срочность, наличие документов, удобный способ связи, имя и телефон. В конце показывает карточку заявки для проверки — клиент подтверждает данные одной кнопкой.',
+          title: 'Заявка',
+          description: 'Срочность, документы, контакт и проверка.',
         },
         {
           src: '/case-legal-bot-04-lead.png',
           alt: 'Карточка новой заявки у менеджера в Telegram с контактами и командой юристов',
-          title: 'Заявка у менеджера',
-          description:
-            'Менеджер мгновенно получает готовую карточку в Telegram: имя, телефон, ссылка на чат, категория, срочность, описание и подходящая команда юристов. Заявка параллельно сохраняется в базе Supabase.',
+          title: 'Менеджеру',
+          description: 'Готовая карточка обращения в Telegram.',
         },
       ],
     },
@@ -320,6 +321,99 @@ const portfolio = {
         },
       ],
     },
+    {
+      id: 'barbershop-booking-bot',
+      title: 'Бот онлайн-записи для барбершопа',
+      label: 'Telegram-бот · онлайн-запись',
+      audience:
+        'Для барбершопов и парикмахерских, где запись идёт через звонки, директ и личные чаты мастеров.',
+      problem:
+        'Клиенты пишут в разное время, слоты пересекаются, часть визитов забывают, а администратор вручную собирает расписание из сообщений.',
+      problemDetail:
+        'Свободные окна ищут вручную в чатах, два клиента могут занять один слот, без напоминаний растут пустые визиты, а администратор вместо работы с салоном собирает расписание из переписки.',
+      before:
+        'До бота запись жила в переписке: свободное окно уточняли вручную, подтверждения терялись, напоминания не уходили вовремя.',
+      work: [
+        'Собран сценарий записи 24/7: услуга → мастер → дата и слот → подтверждение — клиент проходит путь сам, без звонка и ожидания ответа.',
+        'Добавлены «Мои записи» с отменой, мгновенные уведомления администратору с карточкой визита и напоминания клиенту за сутки до визита.',
+        'Защита слотов от пересечений и админ-панель для услуг, мастеров и расписания на этапе пилота.',
+      ],
+      results: [
+        'Клиент бронирует слот в Telegram без звонка — меньше потерянных окон в час пик.',
+        'Администратор сразу видит готовую карточку: кто, на что, когда; можно подтвердить или отменить из чата.',
+        'Напоминание за 24 часа снижает риск «забыл и не пришёл», слоты не пересекаются у двух клиентов.',
+      ],
+      metrics: [
+        { value: '4 шага', label: 'от услуги до подтверждённой записи' },
+        { value: '0 пересечений', label: 'слоты защищены от двойного бронирования' },
+        { value: '24 ч', label: 'напоминание клиенту перед визитом' },
+      ],
+      url: BARBERSHOP_BOT_URL,
+      tags: ['Telegram-бот', 'Онлайн-запись', 'Барбершоп'],
+      productCta: 'Открыть бота в Telegram',
+      cardMedia: 'screenshot',
+      screenshot: {
+        src: '/bb-card.jpg?v=3',
+        alt: 'Превью бота онлайн-записи: подтверждение визита и уведомление админу в Telegram',
+        barLabel: 't.me/PriemZapisi_online_bot',
+      },
+      demo: null,
+      sections: {
+        workTitle: 'Бот, который принимает запись вместо переписки с администратором',
+        resultsTitle: 'Клиент бронирует слот сам, салон получает понятную запись',
+        sliderEyebrow: '03 / Как работает бот',
+        sliderTitle: 'Как выглядит сценарий в Telegram',
+        sliderLayout: 'phones',
+      },
+      heroVisual: {
+        src: '/bb-card.jpg?v=3',
+        alt: 'Два iPhone в барбершопе: запись клиента и уведомление администратору в Telegram',
+        cards: [
+          {
+            position: 'top',
+            label: 'Демо',
+            text: '@PriemZapisi_online_bot',
+          },
+          {
+            position: 'bottom',
+            label: 'Фокус',
+            text: 'Слот без звонка и хаоса в чатах',
+          },
+        ],
+      },
+      slides: [
+        {
+          src: '/bb-iphone-01-start.png',
+          alt: 'Стартовый экран бота онлайн-записи с меню Записаться, Мои записи и Помощь',
+          title: 'Старт',
+          description: 'Приветствие и меню записи.',
+        },
+        {
+          src: '/bb-iphone-02-master.png',
+          alt: 'Выбор услуги и мастера в боте онлайн-записи',
+          title: 'Мастер',
+          description: 'Услуга, цена и выбор мастера.',
+        },
+        {
+          src: '/bb-iphone-03-slot.png',
+          alt: 'Выбор свободного слота даты и времени в Telegram-боте',
+          title: 'Слот',
+          description: 'Только свободное время.',
+        },
+        {
+          src: '/bb-iphone-04-confirm.png',
+          alt: 'Подтверждение записи клиенту с услугой, мастером, датой и ценой',
+          title: 'Готово',
+          description: 'Подтверждение визита клиенту.',
+        },
+        {
+          src: '/bb-iphone-05-admin.png',
+          alt: 'Уведомление администратору о новой записи с кнопками подтверждения и отмены',
+          title: 'Салону',
+          description: 'Карточка новой записи админу.',
+        },
+      ],
+    },
   ],
 };
 
@@ -401,6 +495,7 @@ function useScrollReveal(route) {
         '.project-panel',
         '.case-hero__visual',
         '.case-slider',
+        '.case-phones__shot',
         '.bs-reveal',
       ].join(', ')
     );
@@ -441,7 +536,8 @@ function useScrollReveal(route) {
 
 function App() {
   const route = useHashRoute();
-  const isProductRoute = route === '/beige-studio';
+  const ProductPage = route === '/beige-studio' ? BeigeStudioLanding : null;
+  const isProductRoute = Boolean(ProductPage);
   const selectedCase = useMemo(() => {
     const match = route.match(/^\/case\/(.+)$/);
     if (!match) return null;
@@ -470,8 +566,8 @@ function App() {
   return (
     <>
       {!isProductRoute && <Header />}
-      {isProductRoute ? (
-        <BeigeStudioLanding />
+      {ProductPage ? (
+        <ProductPage />
       ) : selectedCase ? (
         <CasePage item={selectedCase} />
       ) : (
@@ -665,7 +761,7 @@ function Cases() {
                   <span key={tag}>{tag}</span>
                 ))}
               </div>
-              <a className="button button--case" href={`#/case/${item.id}`}>
+              <a className="button button--case" href={item.caseHref || `#/case/${item.id}`}>
                 Открыть кейс
               </a>
             </div>
@@ -970,7 +1066,13 @@ function CasePage({ item }) {
             <h1>{item.title}</h1>
             <p className="hero__lead">{item.problem}</p>
             <div className="hero__actions">
-              <a className="button button--primary" href={item.url} target="_blank" rel="noreferrer">
+              <a
+                className="button button--primary"
+                href={item.url}
+                {...(item.url.startsWith('#')
+                  ? {}
+                  : { target: '_blank', rel: 'noreferrer' })}
+              >
                 {item.productCta}
               </a>
               <a className="button button--ghost" href="#contact">
@@ -984,7 +1086,7 @@ function CasePage({ item }) {
 
       <section className="section case-details">
         <InfoBlock title="Для кого сделан" text={item.audience} />
-        <InfoBlock title="Какую проблему решает" text={item.problem} />
+        <InfoBlock title="Какую проблему решает" text={item.problemDetail || item.problem} />
         <InfoBlock title="Как было до" text={item.before} />
       </section>
 
@@ -1026,7 +1128,14 @@ function CasePage({ item }) {
             <p className="eyebrow">{item.sections.sliderEyebrow || '03 / Как работает бот'}</p>
             <h2>{item.sections.sliderTitle || 'От первого сообщения до заявки у менеджера — по шагам'}</h2>
           </div>
-          <ScreenshotSlider slides={item.slides} />
+          {item.sections.sliderLayout === 'phones' || item.sections.sliderLayout === 'shots' ? (
+            <PhoneStripGallery
+              slides={item.slides}
+              variant={item.sections.sliderLayout === 'shots' ? 'shots' : 'phones'}
+            />
+          ) : (
+            <ScreenshotSlider slides={item.slides} />
+          )}
         </section>
       ) : (
         <section className="section gallery-section">
@@ -1123,7 +1232,11 @@ function CaseCardMedia({ item }) {
     return <ChatMockup compact />;
   }
 
-  return <ProjectScreenshot screenshot={item.screenshot} compact />;
+  return (
+    <figure className="case-card__shot">
+      <img src={item.screenshot.src} alt={item.screenshot.alt} />
+    </figure>
+  );
 }
 
 function CaseGalleryContent({ item, galleryItem, compact = false }) {
@@ -1279,6 +1392,99 @@ function LegalLeadCardMockup() {
       <div>Телефон: +7 *** ***-**-45</div>
       <button type="button">Принять в работу</button>
     </div>
+  );
+}
+
+function CaseZoomIcon() {
+  return (
+    <span className="case-zoom-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none">
+        <circle cx="10.5" cy="10.5" r="6" stroke="currentColor" strokeWidth="2" />
+        <path d="M15.5 15.5L20 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    </span>
+  );
+}
+
+function PhoneStripGallery({ slides, variant = 'phones' }) {
+  const [lightbox, setLightbox] = useState(null);
+  const isShots = variant === 'shots';
+
+  useEffect(() => {
+    if (!lightbox) return undefined;
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setLightbox(null);
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [lightbox]);
+
+  return (
+    <>
+      <p className="case-phones__hint">Листайте экраны →</p>
+      <div className="case-phones-wrap">
+        <div
+          className={`case-phones${isShots ? ' case-phones--shots' : ''}`}
+          role="list"
+          aria-label="Экраны бота по шагам"
+        >
+          {slides.map((slide) => (
+            <figure className="case-phones__shot" role="listitem" key={slide.src}>
+              <button
+                type="button"
+                className="case-phones__frame case-phones__frame--zoom"
+                aria-label={`Увеличить: ${slide.title}`}
+                onClick={() => setLightbox(slide)}
+              >
+                <img src={slide.src} alt={slide.alt} loading="lazy" />
+                <span className="case-zoom-icon-btn">
+                  <CaseZoomIcon />
+                </span>
+              </button>
+              <figcaption>
+                <strong>{slide.title}</strong>
+                <span>{slide.description}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+
+      {lightbox && (
+        <div className="case-lightbox" role="dialog" aria-modal="true" aria-label={lightbox.title}>
+          <button
+            className="case-lightbox__backdrop"
+            type="button"
+            aria-label="Закрыть просмотр"
+            onClick={() => setLightbox(null)}
+          />
+          <div className="case-lightbox__panel">
+            <div className="case-lightbox__header">
+              <strong>{lightbox.title}</strong>
+              <button
+                className="case-lightbox__close"
+                type="button"
+                aria-label="Закрыть"
+                onClick={() => setLightbox(null)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="case-lightbox__body">
+              <img src={lightbox.src} alt={lightbox.alt || lightbox.title} />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
