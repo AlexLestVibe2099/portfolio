@@ -1550,21 +1550,29 @@ p {
 
 .case-slider__track {
   display: flex;
+  width: 100%;
   transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 
 .case-slider__slide {
-  min-width: 100%;
+  box-sizing: border-box;
+  flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   margin: 0;
-  flex-shrink: 0;
+  overflow: hidden;
 }
 
 .case-slider__slide img {
   display: block;
   width: 100%;
+  max-width: 100%;
+  height: auto;
   max-height: 560px;
   object-fit: contain;
+  object-position: center;
   background: #10151c;
 }
 
@@ -1703,7 +1711,7 @@ p {
 
 .case-slider__thumbs {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 12px;
 }
 
